@@ -1,0 +1,21 @@
+
+[AmazonProvider]
+Cluster=ompcloud-cluster
+Bucket=ompcloud-bucket
+AccessKey=XXXXXXX
+SecretKey=XXXXXXX
+AdditionalArgs=--host-bucket=ompcloud-bucket.s3-sa-east-1.amazonaws.com --host=s3-sa-east-1.amazonaws.com
+KeyFile=/opt/cloud-conf/awskey.pem
+
+[HDFS]
+HostName=s3n://ompcloud-bucket
+Port=8020
+User=ompcloud-user
+WorkingDir=/ompcloud-test
+
+[Spark]
+HostName=ec2-XXXXX.sa-east-1.compute.amazonaws.com
+User=sparkbox
+Port=7077
+Mode=client
+AdditionalArgs=--executor-memory 40g --driver-memory 20g --driver-cores 4 --executor-cores 32 --conf spark.cores.max=256 --conf spark.default.parallelism=128 --conf spark.task.cpus=2
