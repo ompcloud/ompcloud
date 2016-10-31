@@ -12,7 +12,7 @@ install:
   - docker build -f Dockerfile -t $DOCKER_REPO:$TRAVIS_COMMIT .
 
 script:
-  - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$COMMIT /sbin/my_init
+  - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$TRAVIS_COMMIT /sbin/my_init
   - docker ps | grep -q $DOCKER_IMG
 
 after_success:
