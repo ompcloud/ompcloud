@@ -119,11 +119,6 @@ ENV LIBHDFS3_CONF $CLOUD_CONF_DIR/hdfs-client.xml
 
 # Setup dev tools
 
-# Build llvm/clang
-RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
-RUN git clone --depth 100 git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
-RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make clang -j2
-
 # Build libomptarget
 RUN git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
 RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC; make -j2
@@ -131,6 +126,11 @@ RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=
 # Prebuild Unibench
 RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
 RUN export CC=$LLVM_BUILD/bin/clang; mkdir $UNIBENCH_BUILD; cd $UNIBENCH_BUILD; cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release
+
+# Build llvm/clang
+RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
+RUN git clone --depth 100 git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
+RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; #make clang -j2
 
 ENV TERM xterm
 
