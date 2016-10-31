@@ -46,7 +46,7 @@ RUN apt-get update && \
 RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
     libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
     libboost-all-dev libssh-dev libelf-dev libffi-dev python-pip sbt \
-    openssh-server
+    openssh-servergit p
 RUN pip install --upgrade pip s3cmd
 
 RUN mkdir $CLOUD_TEMP
@@ -125,7 +125,7 @@ RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=
 
 # Prebuild Unibench
 RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
-RUN export CC=$LLVM_BUILD/bin/clang; mkdir $UNIBENCH_BUILD; cd $UNIBENCH_BUILD; cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release
+#RUN export CC=$LLVM_BUILD/bin/clang; mkdir $UNIBENCH_BUILD; cd $UNIBENCH_BUILD; cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release
 
 # Build llvm/clang
 RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
