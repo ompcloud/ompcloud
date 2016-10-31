@@ -46,7 +46,7 @@ RUN apt-get update && \
 RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
     libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
     libboost-all-dev libssh-dev libelf-dev libffi-dev python-pip sbt \
-    openssh-servergit p
+    openssh-server git
 RUN pip install --upgrade pip s3cmd
 
 RUN mkdir $CLOUD_TEMP
