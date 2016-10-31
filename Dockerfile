@@ -40,32 +40,28 @@ RUN apt-get update && \
     apt-get install -y apt-utils apt-transport-https
 RUN echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-RUN apt-get clean all && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get upgrade -y
 # Default Java 9 does not seem to be compatible with SBT
-RUN apt-get install -y openjdk-8-jre-headless cmake wget
-# For libhdfs3
-RUN apt-get install -y libxml2-dev uuid-dev libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev libboost-all-dev
-# For libomptarget
-RUN apt-get install -y libssh-dev libelf-dev libffi-dev python-pip sbt
-RUN pip install --upgrade pip
-RUN pip install s3cmd
+RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
+    libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
+    libboost-all-dev libssh-dev libelf-dev libffi-dev python-pip sbt \
+    openssh-server
+RUN pip install --upgrade pip s3cmd
 
 RUN mkdir $CLOUD_TEMP
 ADD project-sbt/ $CLOUD_TEMP
 RUN cd $CLOUD_TEMP; sbt assembly
 
 # Install libhdfs3
-RUN git clone git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
+RUN git clone --depth 1 git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
 RUN mkdir $LIBHDFS3_BUILD; cd $LIBHDFS3_BUILD; cmake $LIBHDFS3_SRC; make -j4; make install
 
 # Install openmp
-RUN git clone git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
-RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make install
+RUN git clone --depth 1 git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
+RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make -j4 install
 
 # Install hadoop and spark
-RUN apt-get install -y openssh-server
 RUN wget -nv -P /opt/ $SPARK_REPO/spark-2.0.1-bin-hadoop2.7.tgz
 RUN wget -nv -P /opt/ $HADOOP_REPO/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 RUN cd /opt/; tar -zxf /opt/spark-2.0.1-bin-hadoop2.7.tgz; tar -zxf /opt/hadoop-2.7.3.tar.gz
@@ -80,7 +76,7 @@ RUN service ssh start
 RUN pip install virtualenv virtualenvwrapper
 RUN mkdir -p /opt/virtualenvs
 ENV WORKON_HOME /opt/virtualenvs
-RUN git clone -b spark-2.0 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
+RUN git clone -b spark-2.0 --depth 1 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
 
 # Install cgcloud
 RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh \
@@ -124,13 +120,13 @@ ENV LIBHDFS3_CONF $CLOUD_CONF_DIR/hdfs-client.xml
 # Setup dev tools
 
 # Build llvm/clang
-RUN git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
-RUN git clone git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
-RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make
+RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
+RUN git clone --depth 100 git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
+RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make clang -j2
 
 # Build libomptarget
 RUN git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
-RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC; make
+RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC; make -j2
 
 # Prebuild Unibench
 RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
