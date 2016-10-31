@@ -9,14 +9,15 @@ env:
     - DOCKER_REPO="ompcloud/$DOCKER_IMG"
 
 install:
-  - docker build -f Dockerfile -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
+  - docker build -f Dockerfile -t $DOCKER_REPO:$COMMIT .
 
 script:
-  - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER /sbin/my_init
+  - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$COMMIT /sbin/my_init
   - docker ps | grep -q $DOCKER_IMG
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG
+  - docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
   - docker push $DOCKER_REPO
