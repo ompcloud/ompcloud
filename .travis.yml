@@ -1,0 +1,21 @@
+language: ruby
+
+services:
+  - docker
+
+env:
+  global:
+    - REPO="ompcloud/ompcloud-test"
+
+install:
+  - docker build -f Dockerfile -t $REPO:travis-$TRAVIS_BUILD_NUMBER .
+
+script:
+  - docker run -d --name ompcloud -it $REPO:$COMMIT /sbin/my_init
+  - docker ps | grep -q ompcloud-test
+
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker push $REPO
