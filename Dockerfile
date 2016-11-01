@@ -22,6 +22,7 @@ ENV HADOOP_REPO http://www-eu.apache.org
 ENV SPARK_REPO http://d3kbcqa49mib13.cloudfront.net
 
 ENV LLVM_SRC /opt/llvm
+ENV CLANG_SRC $LLVM_SRC/tools/clang
 ENV LLVM_BUILD /opt/llvm-build
 ENV LIBOMPTARGET_SRC /opt/libomptarget
 ENV LIBOMPTARGET_BUILD /opt/libomptarget-build
@@ -124,9 +125,11 @@ RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
 
 # Build llvm/clang
 RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
-RUN git clone --depth 100 git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
+RUN git clone --depth 100 git://github.com/ompcloud/clang.git $CLANG_SRC
 RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release;
 #make clang -j2
+
+ADD scripts/ $CLOUD_CONF_DIR
 
 ENV TERM xterm
 

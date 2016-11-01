@@ -1,0 +1,17 @@
+#!/bin/bash
+# Update ompcloud tools 
+
+# Update LLVM/Clang
+echo("Update LLVM/Clang...\n")
+cd $LLVM_SRC; git pull
+cd $CLANG_SRC; git pull
+cd $LLVM_BUILD; make clang
+
+# Update libomptarget
+echo("Update libomptarget...\n")
+cd $LIBOMPTARGET_SRC; git pull
+cd $LIBOMPTARGET_BUILD; make
+
+# Update Unibench
+echo("Update Unibench...\n")
+cd $UNIBENCH_SRC; git pull
