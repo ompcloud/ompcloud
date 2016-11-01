@@ -130,6 +130,7 @@ RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="
 #make clang -j2
 
 ADD scripts/ $CLOUD_CONF_DIR
+RUN chmod +x $CLOUD_CONF_DIR/ompcloud_quicktests.sh $CLOUD_CONF_DIR/ompcloud-updatetools.sh
 
 ENV TERM xterm
 
