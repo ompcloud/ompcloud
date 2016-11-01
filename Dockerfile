@@ -17,7 +17,6 @@ ENV CGCLOUD_HOME /opt/cgcloud
 ENV LIBHDFS3_SRC /opt/libhdfs3
 ENV LIBHDFS3_BUILD /opt/libhdfs3-build
 ENV CLOUD_CONF_DIR /opt/cloud-conf
-ENV CLOUD_TEMP /tmp/cloud
 
 ENV HADOOP_REPO http://www-eu.apache.org
 ENV SPARK_REPO http://d3kbcqa49mib13.cloudfront.net
@@ -49,17 +48,13 @@ RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
     openssh-server git
 RUN pip install --upgrade pip s3cmd
 
-RUN mkdir $CLOUD_TEMP
-ADD project-sbt/ $CLOUD_TEMP
-RUN cd $CLOUD_TEMP; sbt assembly
-
 # Install libhdfs3
 RUN git clone --depth 1 git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
-RUN mkdir $LIBHDFS3_BUILD; cd $LIBHDFS3_BUILD; cmake $LIBHDFS3_SRC; make -j4; make install
+RUN mkdir $LIBHDFS3_BUILD; cd $LIBHDFS3_BUILD; cmake $LIBHDFS3_SRC; make -j4; make install; make clean
 
 # Install openmp
 RUN git clone --depth 1 git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
-RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make -j4 install
+RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make -j4 install; make clean
 
 # Install hadoop and spark
 RUN wget -nv -P /opt/ $SPARK_REPO/spark-2.0.1-bin-hadoop2.7.tgz
@@ -130,7 +125,8 @@ RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
 # Build llvm/clang
 RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
 RUN git clone --depth 100 git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
-RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; #make clang -j2
+RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release;
+#make clang -j2
 
 ENV TERM xterm
 
