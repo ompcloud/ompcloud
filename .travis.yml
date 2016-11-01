@@ -1,23 +1,22 @@
 language: ruby
-
 services:
-  - docker
-
+- docker
 env:
   global:
-    - DOCKER_IMG="ompcloud-test"
-    - DOCKER_REPO="ompcloud/$DOCKER_IMG"
-
+  - DOCKER_IMG="ompcloud-test"
+  - DOCKER_REPO="ompcloud/$DOCKER_IMG"
 install:
-  - docker build -f Dockerfile -t $DOCKER_REPO:$TRAVIS_COMMIT .
-
+- docker build -f Dockerfile -t $DOCKER_REPO:$TRAVIS_COMMIT .
 script:
-  - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$TRAVIS_COMMIT /sbin/my_init
-  - docker ps | grep -q $DOCKER_IMG
-
+- docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$TRAVIS_COMMIT /sbin/my_init
+- docker ps | grep -q $DOCKER_IMG
 after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:$TAG
-  - docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $DOCKER_REPO
+- docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH
+  ; fi`
+- docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:$TAG
+- docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $DOCKER_REPO
+notifications:
+  slack:
+    secure: hsZ8zvmYd1sz26ZiudjKWrSv7HGm2C3EXfKuEWyOnE/Fdnmt1nT3hPMG4Epcjqo2AhKC7ZCI1gwOXzG9zsa4XgNNmehnrd8qKdpQdG1rQ7d+Gr2rZ8H+4M87n+yOTNq2VkiLlI644Vwoj8fPQK3cNS/D/cDZv6oZIF7HTUDCARlfiAL9SA7rYb2eZf9fQ41XTFdC/0a9tUV/t2w8n/ImVqWlsKOdjdjyIfw+LRUdc//jp2JlOYu17Z9sOSvD8iXztpaCix4XptukKSFHqsyXKjlPF3h9t/tuQ7BIl4J9o5pFNW9zh09HJYAdeIwIeOhPpb/5tonfBOMOpndI/b+Suh8ETP7pS9km9TT+KQTbBTWzdt+Rl3p7r1ALgt9NB4QPsZhKGUfdItOgM3MH3HV9vDDIH1GxbENaOVnZdEojSUe6+pcsLaa3IsMnX7jT2wSdr3rwgU8Gy8ulLtVFye1HeP9wvKk5Bxn5cSaXIn2lev7tXbojFcLXEjawV5ureWuyhJhxtDIeLoIV9HltJmx4vhgDxHn8WHepoGu9wr8/CreCXjHkh0oAsPPCVu7Nq+MmF/243YHpGqbMTSWL8tx/MU5GtvNaFxrOnfeR6WW/HWfXRtpvcNdq0Xjir/j7Db5TnMPVE30GCed5G0clJnetNsHFmqncnctlrFfgFbwk2sU=
