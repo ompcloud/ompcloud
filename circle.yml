@@ -8,20 +8,19 @@ machine:
 
 dependencies:
   pre:
-    - docker build --rm=false -f Dockerfile -t $DOCKER_REPO/hello:$CIRCLE_SHA1 .
+    - docker build --rm=false -f Dockerfile -t $DOCKER_REPO:$CIRCLE_SHA1 .
 
 test:
   post:
     - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init; sleep 10
     - docker ps | grep -q $DOCKER_IMG
 
-#deployment:
-#  prod:
-#    branch: master
-#    commands:
+deployment:
+  prod:
+    branch: master
+    commands:
 #      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS $EXTERNAL_REGISTRY_ENDPOINT
-#- docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-#- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
-#- docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:$TAG
-#- docker tag $DOCKER_REPO:$TRAVIS_COMMIT $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER
-#- docker push $DOCKER_REPO
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker tag $DOCKER_REPO:$CIRCLE_SHA1 $DOCKER_REPO:latest
+      - docker tag $DOCKER_REPO:$CIRCLE_SHA1 $DOCKER_REPO:circle-$CIRCLE_BUILD_NUM
+      - docker push $DOCKER_REPO

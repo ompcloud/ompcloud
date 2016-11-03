@@ -126,8 +126,7 @@ RUN git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
 # Build llvm/clang
 RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
 RUN git clone --depth 100 git://github.com/ompcloud/clang.git $CLANG_SRC
-RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release;
-#make clang -j2
+RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make -j2
 
 ADD scripts/ $CLOUD_CONF_DIR
 RUN chmod +x $CLOUD_CONF_DIR/ompcloud-quicktests.sh $CLOUD_CONF_DIR/ompcloud-updatetools.sh
