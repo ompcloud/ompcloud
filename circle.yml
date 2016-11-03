@@ -2,11 +2,9 @@
 machine:
   services:
     - docker
-
-env:
-  global:
-  - DOCKER_IMG="ompcloud-test"
-  - DOCKER_REPO="ompcloud/$DOCKER_IMG"
+  environment:
+    DOCKER_IMG: "ompcloud-test"
+    DOCKER_REPO: "ompcloud/$DOCKER_IMG"
 
 dependencies:
   pre:
