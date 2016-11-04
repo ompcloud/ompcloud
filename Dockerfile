@@ -109,6 +109,7 @@ ADD config-rtl-examples/ $CLOUD_CONF_DIR
 ADD config-hdfs/hdfs-client.xml $CLOUD_CONF_DIR
 ADD config-hdfs/core-site.xml $HADOOP_CONF
 ADD config-hdfs/hdfs-site.xml $HADOOP_CONF
+ADD config-hdfs/config /root/.ssh
 
 ENV CLOUD_CONF_PATH $CLOUD_CONF_DIR/cloud_rtl.ini.local
 ENV LIBHDFS3_CONF $CLOUD_CONF_DIR/hdfs-client.xml
