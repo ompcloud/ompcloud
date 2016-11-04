@@ -1,10 +1,4 @@
 language: ruby
-#services:
-#- docker
-#env:
-#  global:
-#  - DOCKER_IMG="ompcloud-test"
-#  - DOCKER_REPO="ompcloud/$DOCKER_IMG"
 script:
 - curl -X POST https://circleci.com/api/v1.1/project/github/ompcloud/ompcloud-docker/tree/master?circle-token=$CIRCLE_TOKEN
 notifications:
