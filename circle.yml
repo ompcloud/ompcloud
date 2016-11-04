@@ -14,6 +14,7 @@ test:
   post:
     - docker run -d --name $DOCKER_IMG -it $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init; sleep 10
     - docker ps | grep -q $DOCKER_IMG
+    - docker exec -i -t $DOCKER_IMG /opt/cloud-conf/ompcloud-quicktests.sh
 
 deployment:
   prod:
