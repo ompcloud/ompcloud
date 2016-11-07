@@ -16,7 +16,8 @@ RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 ENV CGCLOUD_HOME /opt/cgcloud
 ENV LIBHDFS3_SRC /opt/libhdfs3
 ENV LIBHDFS3_BUILD /opt/libhdfs3-build
-ENV CLOUD_CONF_DIR /opt/cloud-conf
+ENV OMPCLOUD_CONF_DIR /opt/ompcloud-conf
+ENV OMPCLOUD_SCRIPT_DIR /opt/ompcloud-script
 
 ENV HADOOP_REPO http://www-eu.apache.org
 ENV SPARK_REPO http://d3kbcqa49mib13.cloudfront.net
@@ -104,15 +105,15 @@ RUN echo '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start; \
     echo '#!/bin/bash\nhdfs-stop;rm -rf /opt/hadoop/hdfs/datanode;hdfs namenode -format;hdfs-start' > /usr/bin/hdfs-reset; \
     chmod +x /usr/bin/hdfs-start /usr/bin/hdfs-stop /usr/bin/hdfs-reset
 
-RUN mkdir $CLOUD_CONF_DIR
-ADD config-rtl-examples/ $CLOUD_CONF_DIR
-ADD config-hdfs/hdfs-client.xml $CLOUD_CONF_DIR
+RUN mkdir $OMPCLOUD_CONF_DIR
+ADD config-rtl-examples/ $OMPCLOUD_CONF_DIR
+ADD config-hdfs/hdfs-client.xml $OMPCLOUD_CONF_DIR
 ADD config-hdfs/core-site.xml $HADOOP_CONF
 ADD config-hdfs/hdfs-site.xml $HADOOP_CONF
 ADD config-hdfs/config /root/.ssh
 
-ENV CLOUD_CONF_PATH $CLOUD_CONF_DIR/cloud_rtl.ini.local
-ENV LIBHDFS3_CONF $CLOUD_CONF_DIR/hdfs-client.xml
+ENV OMPCLOUD_CONF_PATH $OMPCLOUD_CONF_DIR/cloud_rtl.ini.local
+ENV LIBHDFS3_CONF $OMPCLOUD_CONF_DIR/hdfs-client.xml
 
 # Setup dev tools
 
@@ -129,8 +130,9 @@ RUN git clone --depth 100 git://github.com/ompcloud/llvm.git $LLVM_SRC
 RUN git clone --depth 100 git://github.com/ompcloud/clang.git $CLANG_SRC
 RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make -j2
 
-ADD scripts/ $CLOUD_CONF_DIR
-RUN chmod +x $CLOUD_CONF_DIR/ompcloud-quicktests.sh $CLOUD_CONF_DIR/ompcloud-updatetools.sh
+RUN mkdir $OMPCLOUD_SCRIPT_DIR
+ADD scripts/ $OMPCLOUD_SCRIPT_DIR
+RUN chmod +x $OMPCLOUD_SCRIPT_DIR/*
 
 ENV TERM xterm
 
