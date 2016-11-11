@@ -1,6 +1,6 @@
 language: ruby
 script:
-- curl -X POST https://circleci.com/api/v1.1/project/github/ompcloud/ompcloud-docker/tree/master?circle-token=$CIRCLE_TOKEN
+- if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then curl -X POST https://circleci.com/api/v1.1/project/github/ompcloud/ompcloud-docker/tree/master?circle-token=$CIRCLE_TOKEN ; fi
 notifications:
   slack:
     secure: hsZ8zvmYd1sz26ZiudjKWrSv7HGm2C3EXfKuEWyOnE/Fdnmt1nT3hPMG4Epcjqo2AhKC7ZCI1gwOXzG9zsa4XgNNmehnrd8qKdpQdG1rQ7d+Gr2rZ8H+4M87n+yOTNq2VkiLlI644Vwoj8fPQK3cNS/D/cDZv6oZIF7HTUDCARlfiAL9SA7rYb2eZf9fQ41XTFdC/0a9tUV/t2w8n/ImVqWlsKOdjdjyIfw+LRUdc//jp2JlOYu17Z9sOSvD8iXztpaCix4XptukKSFHqsyXKjlPF3h9t/tuQ7BIl4J9o5pFNW9zh09HJYAdeIwIeOhPpb/5tonfBOMOpndI/b+Suh8ETP7pS9km9TT+KQTbBTWzdt+Rl3p7r1ALgt9NB4QPsZhKGUfdItOgM3MH3HV9vDDIH1GxbENaOVnZdEojSUe6+pcsLaa3IsMnX7jT2wSdr3rwgU8Gy8ulLtVFye1HeP9wvKk5Bxn5cSaXIn2lev7tXbojFcLXEjawV5ureWuyhJhxtDIeLoIV9HltJmx4vhgDxHn8WHepoGu9wr8/CreCXjHkh0oAsPPCVu7Nq+MmF/243YHpGqbMTSWL8tx/MU5GtvNaFxrOnfeR6WW/HWfXRtpvcNdq0Xjir/j7Db5TnMPVE30GCed5G0clJnetNsHFmqncnctlrFfgFbwk2sU=
