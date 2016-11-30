@@ -47,7 +47,7 @@ make supported
 
 # Run experiments
 if [ "$DOCKER" = true ]; then
-  ctest -I 1,1,,1,2,4,5,6,7,8,13,15,17 --output-on-failure
+  ctest -I 1,1,,1,2,4,5,6,7,8,13,15,16,18 --output-on-failure
 elif [ "$QUICK" = true ]; then
   ctest -R "mgBench_mat-mul" --output-on-failure
 else
