@@ -3,8 +3,8 @@
 
 UNIBENCH_BUILD_TEST="/opt/Unibench-build-test"
 TESTED_CC="$LLVM_BUILD/bin/clang"
+TEST_LIST="1,1,,1,2,4,5,6,7,8,13,15,16,18"
 
-DOCKER=false
 QUICK=false
 RESET=true
 
@@ -13,9 +13,6 @@ do
   key="$1"
 
   case $key in
-    -d|--docker)
-    DOCKER=true
-    ;;
     -q|--quick)
     QUICK=true
     ;;
@@ -43,13 +40,16 @@ fi
 mkdir -p $UNIBENCH_BUILD_TEST
 cd $UNIBENCH_BUILD_TEST
 cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release -DRUN_TEST=ON
-make supported
+
+if [ "$QUICK" = true ]; then
+  make mat-mul
+else
+  make supported
+fi
 
 # Run experiments
-if [ "$DOCKER" = true ]; then
-  ctest -I 1,1,,1,2,4,5,6,7,8,13,15,16,18 --output-on-failure
-elif [ "$QUICK" = true ]; then
+if [ "$QUICK" = true ]; then
   ctest -R "mgBench_mat-mul" --output-on-failure
 else
-  ctest --output-on-failure
+  ctest -I $TEST_LIST --output-on-failure
 fi
