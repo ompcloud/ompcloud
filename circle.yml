@@ -12,7 +12,7 @@ dependencies:
 
 test:
   post:
-    - docker run -t --name $DOCKER_IMG $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init -- /opt/ompcloud-script/ompcloud-quicktests.sh -d
+    - docker run -t --name $DOCKER_IMG $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init -- /opt/ompcloud-script/ompcloud-quicktests.sh
 
 deployment:
   prod:
