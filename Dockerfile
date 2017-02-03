@@ -18,12 +18,23 @@ ENV LIBHDFS3_SRC /opt/libhdfs3
 ENV LIBHDFS3_BUILD /opt/libhdfs3-build
 ENV OMPCLOUD_CONF_DIR /opt/ompcloud-conf
 ENV OMPCLOUD_SCRIPT_DIR /opt/ompcloud-script
+ENV CLOUD_TEMP /tmp/cloud
+ENV OMPCLOUD_CONF_PATH $OMPCLOUD_CONF_DIR/cloud_rtl.ini.local
+ENV LIBHDFS3_CONF $OMPCLOUD_CONF_DIR/hdfs-client.xml
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 
 ENV HADOOP_REPO http://www-eu.apache.org
+ENV HADOOP_VERSION 2.7.3
+ENV HADOOP_HOME /opt/hadoop-$HADOOP_VERSION
+ENV HADOOP_CONF $HADOOP_HOME/etc/hadoop
+
 ENV SPARK_REPO http://d3kbcqa49mib13.cloudfront.net
+ENV SPARK_VERSION 2.1.0
+ENV SPARK_HADOOP_VERSION 2.7
+ENV SPARK_HOME /opt/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION
 
 ENV LLVM_SRC /opt/llvm
-ENV CLANG_SRC $LLVM_SRC/tools/clang
 ENV LLVM_BUILD /opt/llvm-build
 ENV LIBOMPTARGET_SRC /opt/libomptarget
 ENV LIBOMPTARGET_BUILD /opt/libomptarget-build
@@ -31,8 +42,14 @@ ENV OPENMP_SRC /opt/openmp
 ENV OPENMP_BUILD /opt/openmp-build
 ENV UNIBENCH_SRC /opt/Unibench
 ENV UNIBENCH_BUILD /opt/Unibench-build
+ENV OMPCLOUDTEST_SRC /opt/ompcloud-test
+ENV OMPCLOUDTEST_BUILD /opt/ompcloud-test-build
 
-ENV PATH $PATH
+ENV WORKON_HOME /opt/virtualenvs
+ENV CGCLOUD_PLUGINS cgcloud.spark
+ENV CGCLOUD_ME ompcloud-user
+
+ENV PATH $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
 ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
 
@@ -41,7 +58,8 @@ RUN apt-get update && \
     apt-get install -y apt-utils apt-transport-https
 RUN echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-RUN apt-get update && \
+RUN apt-get clean all && \
+    apt-get update && \
     apt-get upgrade -y
 # Default Java 9 does not seem to be compatible with SBT
 RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
@@ -59,10 +77,11 @@ RUN git clone --depth 1 git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
 RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make -j2 install; make clean
 
 # Install hadoop and spark
-RUN wget -nv -P /opt/ $SPARK_REPO/spark-2.0.1-bin-hadoop2.7.tgz
-RUN wget -nv -P /opt/ $HADOOP_REPO/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
-RUN cd /opt/; tar -zxf /opt/spark-2.0.1-bin-hadoop2.7.tgz; tar -zxf /opt/hadoop-2.7.3.tar.gz
-RUN rm /opt/spark-2.0.1-bin-hadoop2.7.tgz /opt/hadoop-2.7.3.tar.gz
+RUN wget -nv -P /opt/ $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
+RUN wget -nv -P /opt/ $HADOOP_REPO/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+RUN cd /opt/; tar -zxf /opt/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
+RUN cd /opt/; tar -zxf /opt/hadoop-$HADOOP_VERSION.tar.gz
+RUN rm /opt/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz /opt/hadoop-$HADOOP_VERSION.tar.gz
 
 # Configure SSH
 RUN ssh-keygen -q -N "" -t rsa -f ~/.ssh/id_rsa
@@ -72,8 +91,7 @@ RUN service ssh start
 # Install virtualenv
 RUN pip install virtualenv virtualenvwrapper
 RUN mkdir -p /opt/virtualenvs
-ENV WORKON_HOME /opt/virtualenvs
-RUN git clone -b spark-2.0 --depth 1 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
+RUN git clone -b spark-2.0 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
 
 # Install cgcloud
 RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh \
@@ -83,21 +101,13 @@ RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh \
     && make develop sdist"
 
 # Preconfigure cgcloud
-ENV CGCLOUD_PLUGINS cgcloud.spark
-ENV CGCLOUD_ME ompcloud-user
 
 # Create alias for running cgcloud easily
 RUN echo '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' > /usr/bin/cgcloud; \
     chmod +x /usr/bin/cgcloud
 
 # Configure Hadoop and Spark
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
-ENV HADOOP_HOME /opt/hadoop-2.7.3
-ENV HADOOP_CONF $HADOOP_HOME/etc/hadoop/
-ENV SPARK_HOME /opt/spark-2.0.1-bin-hadoop2.7/
-ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
-
-RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\n:' $HADOOP_CONF/hadoop-env.sh
+RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/\n:' $HADOOP_CONF/hadoop-env.sh
 
 # Create aliases for managining the HDFS server
 RUN echo '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start; \
@@ -111,9 +121,6 @@ ADD config-hdfs/hdfs-client.xml $OMPCLOUD_CONF_DIR
 ADD config-hdfs/core-site.xml $HADOOP_CONF
 ADD config-hdfs/hdfs-site.xml $HADOOP_CONF
 ADD config-hdfs/config /root/.ssh
-
-ENV OMPCLOUD_CONF_PATH $OMPCLOUD_CONF_DIR/cloud_rtl.ini.local
-ENV LIBHDFS3_CONF $OMPCLOUD_CONF_DIR/hdfs-client.xml
 
 # Setup dev tools
 
