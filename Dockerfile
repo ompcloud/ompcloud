@@ -125,7 +125,7 @@ ADD config-hdfs/config /root/.ssh
 # Setup dev tools
 
 # Build libomptarget
-RUN git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
+RUN git clone --recursive git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
 RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC; make -j2
 
 # Prebuild Unibench
