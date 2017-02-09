@@ -35,6 +35,7 @@ ENV SPARK_HADOOP_VERSION 2.7
 ENV SPARK_HOME /opt/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION
 
 ENV LLVM_SRC /opt/llvm
+ENV CLANG_SRC $LLVM_SRC/tools/clang
 ENV LLVM_BUILD /opt/llvm-build
 ENV LIBOMPTARGET_SRC /opt/libomptarget
 ENV LIBOMPTARGET_BUILD /opt/libomptarget-build
