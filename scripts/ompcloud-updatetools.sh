@@ -1,6 +1,9 @@
 #!/bin/bash
 # Update ompcloud tools
 
+# Any subsequent commands which fail will cause the script to exit immediately
+set -e
+
 # Update LLVM/Clang
 echo "Update LLVM/Clang..."
 cd $LLVM_SRC; git pull

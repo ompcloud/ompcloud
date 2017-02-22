@@ -1,6 +1,9 @@
 #!/bin/bash
 # Run quick tests for ompcloud
 
+# Any subsequent commands which fail will cause the script to exit immediately
+set -e
+
 UNIBENCH_BUILD_TEST="/opt/Unibench-build-test"
 TESTED_CC="$LLVM_BUILD/bin/clang"
 TEST_LIST="1,1,,1,2,4,5,6,7,8,13,15,16,18"
