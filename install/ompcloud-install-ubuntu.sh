@@ -105,7 +105,6 @@ cd $OMPCLOUD_INSTALL_PREFIX
 tar -zxf $OMPCLOUD_INSTALL_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
 tar -zxf $OMPCLOUD_INSTALL_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
 
-cp ../config-hdfs/hdfs-client.xml $OMPCLOUD_CONF_DIR
 cp ../config-hdfs/core-site.xml $HADOOP_CONF
 cp ../conf-hdfs/hdfs-site.xml $HADOOP_CONF
 #cp ../conf-hdfs/config ~/.ssh
