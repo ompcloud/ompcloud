@@ -4,6 +4,8 @@
 # Any subsequent commands which fail will cause the script to exit immediately
 set -e
 
+BASEDIR=$(dirname "$0")
+
 export OMPCLOUD_INSTALL_PREFIX="/home/ubuntu/workspace"
 export MAKE_ARGS="-j4"
 
@@ -105,8 +107,8 @@ cd $OMPCLOUD_INSTALL_PREFIX
 tar -zxf $OMPCLOUD_INSTALL_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
 tar -zxf $OMPCLOUD_INSTALL_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
 
-cp ../config-hdfs/core-site.xml $HADOOP_CONF
-cp ../conf-hdfs/hdfs-site.xml $HADOOP_CONF
+cp $BASEDIR/../config-hdfs/core-site.xml $HADOOP_CONF
+cp $BASEDIR/../conf-hdfs/hdfs-site.xml $HADOOP_CONF
 #cp ../conf-hdfs/config ~/.ssh
 
 # Configure SSH
