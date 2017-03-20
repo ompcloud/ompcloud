@@ -114,14 +114,14 @@ RUN echo '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start; \
 
 RUN mkdir $OMPCLOUD_CONF_DIR
 COPY conf/ $OMPCLOUD_CONF_DIR
-COPY config-hdfs/core-site.xml $HADOOP_CONF
-COPY config-hdfs/hdfs-site.xml $HADOOP_CONF
-COPY config-hdfs/config /root/.ssh
+COPY conf-hdfs/core-site.xml $HADOOP_CONF
+COPY conf-hdfs/hdfs-site.xml $HADOOP_CONF
+COPY conf-hdfs/config /root/.ssh
 
 # Setup dev tools
 
 # Build libomptarget
-RUN git clone --recursive git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
+RUN git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
 RUN mkdir $LIBOMPTARGET_BUILD; cd $LIBOMPTARGET_BUILD; cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC; make -j2
 
 # Prebuild Unibench
