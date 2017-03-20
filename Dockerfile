@@ -66,16 +66,12 @@ RUN apt-get clean all && \
 RUN apt-get install -y openjdk-8-jre-headless cmake wget libxml2-dev uuid-dev \
     libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
     libboost-all-dev libssh-dev libelf-dev libffi-dev python-pip sbt \
-    openssh-server git
+    openssh-server git libomp-dev
 RUN pip install --upgrade pip s3cmd
 
 # Install libhdfs3
 RUN git clone --depth 1 git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
 RUN mkdir $LIBHDFS3_BUILD; cd $LIBHDFS3_BUILD; cmake $LIBHDFS3_SRC; make -j2; make install; make clean
-
-# Install openmp
-RUN git clone --depth 1 git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
-RUN mkdir $OPENMP_BUILD; cd $OPENMP_BUILD; cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC; make -j2 install; make clean
 
 # Install hadoop and spark
 RUN wget -nv -P /opt/ $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
