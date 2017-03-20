@@ -117,11 +117,10 @@ RUN echo '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start; \
     chmod +x /usr/bin/hdfs-start /usr/bin/hdfs-stop /usr/bin/hdfs-reset
 
 RUN mkdir $OMPCLOUD_CONF_DIR
-ADD config-rtl-examples/ $OMPCLOUD_CONF_DIR
-ADD config-hdfs/hdfs-client.xml $OMPCLOUD_CONF_DIR
-ADD config-hdfs/core-site.xml $HADOOP_CONF
-ADD config-hdfs/hdfs-site.xml $HADOOP_CONF
-ADD config-hdfs/config /root/.ssh
+COPY conf/ $OMPCLOUD_CONF_DIR
+COPY config-hdfs/core-site.xml $HADOOP_CONF
+COPY config-hdfs/hdfs-site.xml $HADOOP_CONF
+COPY config-hdfs/config /root/.ssh
 
 # Setup dev tools
 
@@ -139,7 +138,7 @@ RUN git clone --depth 100 git://github.com/ompcloud/clang.git $CLANG_SRC
 RUN mkdir $LLVM_BUILD; cd $LLVM_BUILD; cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release; make -j2
 
 RUN mkdir $OMPCLOUD_SCRIPT_DIR
-ADD scripts/ $OMPCLOUD_SCRIPT_DIR
+COPY script/ $OMPCLOUD_SCRIPT_DIR
 RUN chmod +x $OMPCLOUD_SCRIPT_DIR/*
 
 ENV TERM xterm
