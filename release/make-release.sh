@@ -108,8 +108,9 @@ cp -R $HOME/.ivy2/local $RELEASE_DIR
 
 cp $INSTALL_RELEASE_SCRIPT $RELEASE_DIR
 
+cd $RELEASE_DIR
 ## Create tarball
-tar -zcvf $RELEASE_DIR.tar.gz $RELEASE_DIR
+tar -zcvf $RELEASE_DIR.tar.gz *
 
 ## Get tarball from docker
 mv $RELEASE_DIR.tar.gz /io/
