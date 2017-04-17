@@ -47,6 +47,7 @@ export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
 export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/release/ompcloud-install-release-ubuntu.sh"
 
 export RELEASE_DIR="$OMPCLOUD_RELEASE_PREFIX/ompcloud-$1-linux-amd64"
+export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 
 mkdir -p $OMPCLOUD_RELEASE_PREFIX
 
@@ -81,7 +82,7 @@ cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
 cp -R $OMPCLOUD_SCRIPT_DIR $RELEASE_DIR
 
 mkdir $RELEASE_DIR/bin
-mkdir $RELEASE_DIR/lib
+mkdir $INCLUDE_DIR
 
 # LLVM/Clang Binaries
 cd $LLVM_BUILD/bin/
@@ -90,6 +91,7 @@ cp * $RELEASE_DIR/bin/
 # LLVM/CLang libraries
 cd $LLVM_BUILD/lib/
 cp $(ls | fgrep .so) $RELEASE_DIR/lib/
+cp -R clang/3.8.0/include $INCLUDE_DIR
 
 # Libomptarget libraries
 cd $LIBOMPTARGET_BUILD/lib/
