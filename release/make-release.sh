@@ -4,6 +4,10 @@
 # Any subsequent commands which fail will cause the script to exit immediately
 set -e
 
+function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
+
+BASEDIR=$(dirname "$0")
+
 if [ $# -eq 0 ]
 then
     echo "ERROR: No version especified"
@@ -14,12 +18,10 @@ fi
 if [ ! -d "/io" ]; then
     echo "Entering ompcloud docker"
 
-    sudo docker run -t -i --rm -v $(pwd)/..:/io ompcloud/ompcloud-test:latest /io/release/make-release.sh 1.0
+    sudo docker run -t -i --rm -v $(realpath $BASEDIR/..):/io ompcloud/ompcloud-test:latest /io/release/make-release.sh 1.0
 
     exit
 fi
-
-BASEDIR=$(dirname "$0")
 
 export OMPCLOUD_RELEASE_PREFIX="/opt/release"
 export MAKE_ARGS="-j4"
