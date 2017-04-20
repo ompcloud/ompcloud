@@ -6,8 +6,6 @@ set -e
 
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
-BASEDIR=$(dirname "$0")
-
 if [ $# -eq 0 ]
 then
     echo "ERROR: No version especified"
@@ -15,10 +13,13 @@ then
     exit
 fi
 
+BASEDIR=$(dirname "$0")
+VERSION=$1
+
 if [ ! -d "/io" ]; then
     echo "Entering ompcloud docker"
 
-    sudo docker run -t -i --rm -v $(realpath $BASEDIR/..):/io ompcloud/ompcloud-test:latest /io/release/make-release.sh $1
+    sudo docker run -t -i --rm -v $(realpath $BASEDIR/..):/io ompcloud/ompcloud-test:latest /io/release/make-release.sh $VERSION
 
     exit
 fi
@@ -48,7 +49,7 @@ export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
 
 export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/release/ompcloud-install-release-ubuntu.sh"
 
-export RELEASE_DIR="$OMPCLOUD_RELEASE_PREFIX/ompcloud-$1-linux-amd64"
+export RELEASE_DIR="$OMPCLOUD_RELEASE_PREFIX/ompcloud-$VERSION-linux-amd64"
 export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 
 mkdir -p $OMPCLOUD_RELEASE_PREFIX
