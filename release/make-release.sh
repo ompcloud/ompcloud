@@ -43,10 +43,6 @@ export LLVM_BUILD="$OMPCLOUD_RELEASE_PREFIX/llvm-build"
 export LIBOMPTARGET_SRC="$OMPCLOUD_RELEASE_PREFIX/libomptarget"
 export LIBOMPTARGET_BUILD="$OMPCLOUD_RELEASE_PREFIX/libomptarget-build"
 
-export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin"
-export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
-export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
-
 export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/release/ompcloud-install-release-ubuntu.sh"
 
 export RELEASE_DIR="$OMPCLOUD_RELEASE_PREFIX/ompcloud-$VERSION-linux-amd64"
@@ -61,10 +57,9 @@ mkdir $LIBHDFS3_BUILD
 cd $LIBHDFS3_BUILD
 cmake $LIBHDFS3_SRC
 make $MAKE_ARGS
-make install
 
 # Build libomptarget
-git clone --recursive git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
+git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
 mkdir $LIBOMPTARGET_BUILD
 cd $LIBOMPTARGET_BUILD
 cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC
