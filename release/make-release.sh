@@ -18,7 +18,7 @@ fi
 if [ ! -d "/io" ]; then
     echo "Entering ompcloud docker"
 
-    sudo docker run -t -i --rm -v $(realpath $BASEDIR/..):/io ompcloud/ompcloud-test:latest /io/release/make-release.sh 1.0
+    sudo docker run -t -i --rm -v $(realpath $BASEDIR/..):/io ompcloud/ompcloud-test:latest /io/release/make-release.sh $1
 
     exit
 fi
