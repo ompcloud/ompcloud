@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install ompcloud tools in Ubuntu 16.04
+# Make tarball release for ompcloud in Ubuntu 16.04 docker
 
 # Any subsequent commands which fail will cause the script to exit immediately
 set -e
@@ -13,6 +13,7 @@ then
     exit
 fi
 
+# Directory of the script
 BASEDIR=$(dirname "$0")
 VERSION=$1
 
@@ -68,7 +69,7 @@ fi
 apt-get clean all && \
   apt-get update && \
   apt-get upgrade -y
-apt-get install -y sbt 
+apt-get install -y sbt
 
 
 # Install libhdfs3
@@ -79,7 +80,7 @@ cd $LIBHDFS3_BUILD
 cmake $LIBHDFS3_SRC
 make $MAKE_ARGS
 
-ln -s $LIBHDFS3_SRC/src/client $LIBHDFS3_INCLUDE_LINK 
+ln -s $LIBHDFS3_SRC/src/client $LIBHDFS3_INCLUDE_LINK
 
 # Build libomptarget
 git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
