@@ -56,9 +56,9 @@ ENV PATH $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
 ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
 ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
 
-COPY ompcloud-install-release2.sh /
+COPY ompcloud-install-release.sh /
 
-RUN ./ompcloud-install-release2.sh -i $INSTALL_DIR -d
+RUN ./ompcloud-install-release.sh -i $INSTALL_DIR -d
 
 RUN mkdir $OMPCLOUD_CONF_DIR
 COPY conf/ $OMPCLOUD_CONF_DIR
