@@ -3,10 +3,10 @@ RELEASE_ARGS=$(filter-out $@,$(MAKECMDGOALS))
 #RELEASE_FOLDER=$(firstword $(subst .tar, , ${RELEASE_TARBALL}))
 
 
-all: install/ompcloud-install-ubuntu.sh
+all: ompcloud-install-release.sh
 	./ompcloud-install-release.sh -i
 
-release-linux64: release/make-release.sh
+release-linux64: ompcloud-install-release.sh
 	./ompcloud-install-release.sh -r ${RELEASE_ARGS}
 
 #install: ${RELEASE_TARBALL}

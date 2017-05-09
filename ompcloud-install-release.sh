@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
     echo "ERROR: No operation mode especified"
     echo "Usage: $0 <-r || -i> [<version>]"
     echo "      -r <version>: Generate release tarball of ompcloud"
-    echo "      -i: Install ompcloud in current system"
+    echo "      -i [<install-dir>]: Install ompcloud in current system"
     exit
 elif [ $# -eq 1 ]; then
     if [ $1 == "-r" ]; then
@@ -53,13 +53,24 @@ if [ $OP == "-r" ]; then
     export RELEASE_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-$VERSION-linux-amd64"
     export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 else
-    SUDO="sudo"
-    export OMPCLOUD_RI_PREFIX="/home/ubuntu/workspace"
+    if [ $# -ge 2 ]; then
+        export OMPCLOUD_RI_PREFIX="$2"
+    else
+        export OMPCLOUD_RI_PREFIX="/home/ubuntu/workspace"
+    fi
+
+    if [ $# -eq 3 ] && [ $3 == "-d" ]; then
+        SUDO=""
+        DOCKER=1
+    else
+        SUDO="sudo"
+        DOCKER=0
+    fi
 
     export CGCLOUD_HOME="$OMPCLOUD_RI_PREFIX/cgcloud"
 
-    export OMPCLOUD_CONF_DIR="$OMPCLOUD_RI_PREFIX/ompcloud/conf"
-    export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_RI_PREFIX/ompcloud/script"
+    export OMPCLOUD_CONF_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-conf"
+    export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-script"
 
     export HADOOP_REPO="http://www-eu.apache.org"
     export HADOOP_VERSION="2.7.3"
@@ -82,7 +93,7 @@ else
 
     export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin"
     export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
-    export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
+    export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib:/lib/x86_64-linux-gnu"
 fi
 
 export MAKE_ARGS="-j4"
@@ -170,6 +181,11 @@ if [ $OP == "-r" ]; then
     cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
     cp -R $OMPCLOUD_SCRIPT_DIR $RELEASE_DIR
 
+    cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
+    cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
+    cp $OMPCLOUD_DIR/release/INSTALL $RELEASE_DIR
+    cp $OMPCLOUD_DIR/release/Makefile $RELEASE_DIR
+
     mkdir -p $RELEASE_DIR/bin
     mkdir -p $INCLUDE_DIR
 
@@ -221,9 +237,11 @@ else
     tar -zxf $OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
     tar -zxf $OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
 
-    cp $BASEDIR/conf-hdfs/core-site.xml $HADOOP_CONF
-    cp $BASEDIR/conf-hdfs/hdfs-site.xml $HADOOP_CONF
-    #cp ../conf-hdfs/config ~/.ssh
+    if [ $DOCKER -eq 0 ]; then
+        cp $BASEDIR/conf-hdfs/core-site.xml $HADOOP_CONF
+        cp $BASEDIR/conf-hdfs/hdfs-site.xml $HADOOP_CONF
+        cp $BASEDIR/conf-hdfs/config ~/.ssh
+    fi
 
     # Configure SSH
     #ssh-keygen -q -N "" -t rsa -f ~/.ssh/id_rsa
@@ -238,8 +256,8 @@ else
         && make develop sdist"
 
     # TOFIX Create alias for running cgcloud easily
-    #echo '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | $SUDO tee -a /usr/bin/cgcloud
-    #$SUDO chmod ugo+x /usr/bin/cgcloud
+    echo '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | $SUDO tee -a /usr/bin/cgcloud
+    $SUDO chmod ugo+x /usr/bin/cgcloud
 
     # Configure Hadoop and Spark
     # FIXME: JAVA_HOME is hard coded
