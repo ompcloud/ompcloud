@@ -68,7 +68,7 @@ else
         SUDO=""
         DOCKER=1
     else
-        SUDO=""
+        SUDO="sudo"
         DOCKER=0
     fi
 
