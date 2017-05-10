@@ -9,21 +9,23 @@ if [ $# -eq 0 ]; then
     echo "Usage: $0 <-r || -i> [<version>]"
     echo "      -r <version>: Generate release tarball of ompcloud"
     echo "      -i [<install-dir>]: Install ompcloud in current system"
+    echo "      -ri [<install-dir>]: Install ompcloud from release"
     exit
 elif [ $# -eq 1 ]; then
     if [ $1 == "-r" ]; then
         echo "ERROR: No version for especified for the release"
         echo "Usage: $0 -r <version>"
         exit
-    elif [ $1 != "-i" ]; then
+    elif [ $1 != "-i" ] || [ $1 != "-ri" ]; then
         echo "ERROR: Unknown operation mode"
-        echo "Usage: $0 <-r || -i> [<version>]"
+        echo "Usage: $0 <-r||-i||-ri> [<version>]"
         exit
     fi
 fi
 
 # Directory of the script
 BASEDIR=$(dirname "$0")
+REAL_BASEDIR="$(realpath $BASEDIR)"
 # Operation mode
 OP=$1
 
@@ -48,9 +50,12 @@ if [ $OP == "-r" ]; then
     export OMPCLOUD_CONFHDFS_DIR="$OMPCLOUD_DIR/conf-hdfs"
     export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_DIR/script"
 
-    export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/release/ompcloud-install-release-ubuntu.sh"
+    export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/ompcloud-install-release.sh"
 
     export RELEASE_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-$VERSION-linux-amd64"
+    export OMPCLOUD_CONF_DIR_R="$RELEASE_DIR/ompcloud-conf"
+    export OMPCLOUD_CONFHDFS_DIR_R="$RELEASE_DIR/conf-hdfs"
+    export OMPCLOUD_SCRIPT_DIR_R="$RELEASE_DIR/ompcloud-script"
     export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 else
     if [ $# -ge 2 ]; then
@@ -63,7 +68,7 @@ else
         SUDO=""
         DOCKER=1
     else
-        SUDO="sudo"
+        SUDO=""
         DOCKER=0
     fi
 
@@ -98,17 +103,27 @@ fi
 
 export MAKE_ARGS="-j4"
 
-export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
-export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
+if [ $OP == "-ri" ]; then
+    export LIBHDFS3_BUILD="$REAL_BASEDIR"
 
-export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
-export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
+    export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
+    export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
 
-export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
-export CLANG_SRC="$LLVM_SRC/tools/clang"
-export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
-export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
-export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
+    export LLVM_BUILD="$REAL_BASEDIR"
+    export LIBOMPTARGET_BUILD="$REAL_BASEDIR"
+else
+    export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
+    export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
+
+    export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
+    export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
+
+    export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
+    export CLANG_SRC="$LLVM_SRC/tools/clang"
+    export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
+    export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
+    export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
+fi
 
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
@@ -135,51 +150,62 @@ $SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
   libboost-all-dev libssh-dev libelf-dev libffi-dev sbt \
   openssh-server git openjdk-8-jre-headless
 
-if [ $OP == "-i" ]; then
+if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
     $SUDO apt-get install -y  wget python-pip
 
     $SUDO pip install s3cmd virtualenv virtualenvwrapper
 fi
 
+if [ $OP == "-ri" ]; then
+    cp -R $REAL_BASEDIR/local $HOME/.ivy2/
+fi
+
 mkdir -p $OMPCLOUD_RI_PREFIX
 
-# Install libhdfs3
-mkdir $LIBHDFS3_SRC
-git clone git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
-mkdir $LIBHDFS3_BUILD
-cd $LIBHDFS3_BUILD
-cmake $LIBHDFS3_SRC
-make $MAKE_ARGS
+if [ $OP == "-i" ] || [ $OP == "-r" ]; then
 
-if [ $OP == "-i" ]; then
-    $SUDO make install
+    # Install libhdfs3
+    mkdir $LIBHDFS3_SRC
+    git clone git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
+    mkdir $LIBHDFS3_BUILD
+    cd $LIBHDFS3_BUILD
+    cmake $LIBHDFS3_SRC
+    make $MAKE_ARGS
+
+    if [ $OP == "-i" ]; then
+        $SUDO make install
+    fi
+
+    if [ $OP == "-r" ]; then
+        ln -s $LIBHDFS3_SRC/src/client $LIBHDFS3_INCLUDE_LINK
+    fi
+
+    # Build libomptarget
+    git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
+    mkdir $LIBOMPTARGET_BUILD
+    cd $LIBOMPTARGET_BUILD
+    cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC
+    make $MAKE_ARGS
+
+    # Build llvm/clang
+    git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
+    git clone git://github.com/ompcloud/clang.git $CLANG_SRC
+    mkdir $LLVM_BUILD
+    cd $LLVM_BUILD
+    cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release
+    make $MAKE_ARGS
 fi
-
-if [ $OP == "-r" ]; then
-    ln -s $LIBHDFS3_SRC/src/client $LIBHDFS3_INCLUDE_LINK
-fi
-
-# Build libomptarget
-git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
-mkdir $LIBOMPTARGET_BUILD
-cd $LIBOMPTARGET_BUILD
-cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC
-make $MAKE_ARGS
-
-# Build llvm/clang
-git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
-git clone git://github.com/ompcloud/clang.git $CLANG_SRC
-mkdir $LLVM_BUILD
-cd $LLVM_BUILD
-cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release
-make $MAKE_ARGS
 
 if [ $OP == "-r" ]; then
     #OMPCloud
     mkdir -p $RELEASE_DIR
-    cp -R $OMPCLOUD_CONF_DIR $RELEASE_DIR
-    cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
-    cp -R $OMPCLOUD_SCRIPT_DIR $RELEASE_DIR
+    mkdir -p $OMPCLOUD_CONF_DIR_R
+    mkdir -p $OMPCLOUD_CONFHDFS_DIR_R
+    mkdir -p $OMPCLOUD_SCRIPT_DIR_R
+
+    cp -R $OMPCLOUD_CONF_DIR/* $OMPCLOUD_CONF_DIR_R
+    cp -R $OMPCLOUD_CONFHDFS_DIR/* $OMPCLOUD_CONFHDFS_DIR_R
+    cp -R $OMPCLOUD_SCRIPT_DIR/* $OMPCLOUD_SCRIPT_DIR_R
 
     cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
     cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
@@ -238,9 +264,9 @@ else
     tar -zxf $OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
 
     if [ $DOCKER -eq 0 ]; then
-        cp $BASEDIR/conf-hdfs/core-site.xml $HADOOP_CONF
-        cp $BASEDIR/conf-hdfs/hdfs-site.xml $HADOOP_CONF
-        cp $BASEDIR/conf-hdfs/config ~/.ssh
+        cp $REAL_BASEDIR/conf-hdfs/core-site.xml $HADOOP_CONF
+        cp $REAL_BASEDIR/conf-hdfs/hdfs-site.xml $HADOOP_CONF
+        cp $REAL_BASEDIR/conf-hdfs/config $HOME/.ssh
     fi
 
     # Configure SSH
@@ -256,7 +282,7 @@ else
         && make develop sdist"
 
     # TOFIX Create alias for running cgcloud easily
-    echo '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | $SUDO tee -a /usr/bin/cgcloud
+    $SUDO printf '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | $SUDO tee -a /usr/bin/cgcloud
     $SUDO chmod ugo+x /usr/bin/cgcloud
 
     # Configure Hadoop and Spark
@@ -264,9 +290,9 @@ else
     sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/\n:' $HADOOP_CONF/hadoop-env.sh
 
     # TOFIX Create aliases for managining the HDFS server
-    $SUDO bash -c "echo '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start"
-    $SUDO bash -c "echo '#!/bin/bash\nstop-yarn.sh;stop-dfs.sh' > /usr/bin/hdfs-stop"
-    $SUDO bash -c "echo '#!/bin/bash\nhdfs-stop;rm -rf $OMPCLOUD_RI_PREFIX/hadoop/hdfs/datanode;hdfs namenode -format -force;hdfs-start' > /usr/bin/hdfs-reset"
+    $SUDO bash -c "printf '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start"
+    $SUDO bash -c "printf '#!/bin/bash\nstop-yarn.sh;stop-dfs.sh' > /usr/bin/hdfs-stop"
+    $SUDO bash -c "printf '#!/bin/bash\nhdfs-stop;rm -rf $OMPCLOUD_RI_PREFIX/hadoop/hdfs/datanode;hdfs namenode -format -force;hdfs-start' > /usr/bin/hdfs-reset"
     $SUDO chmod ugo+x /usr/bin/hdfs-start /usr/bin/hdfs-stop /usr/bin/hdfs-reset
 
     # Prebuild Unibench

@@ -4,7 +4,7 @@ RELEASE_ARGS=$(filter-out $@,$(MAKECMDGOALS))
 
 
 all: ompcloud-install-release.sh
-	./ompcloud-install-release.sh -i
+	./ompcloud-install-release.sh -i ${RELEASE_ARGS}
 
 release-linux64: ompcloud-install-release.sh
 	./ompcloud-install-release.sh -r ${RELEASE_ARGS}

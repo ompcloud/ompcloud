@@ -92,7 +92,7 @@ mkdir $OPENMP_BUILD
 cd $OPENMP_BUILD
 cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC
 make $MAKE_ARGS
-sudo sudo make install
+sudo make install
 
 # Install hadoop and spark
 wget -nv -P $OMPCLOUD_INSTALL_PREFIX $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
@@ -118,8 +118,8 @@ git clone -b spark-2.0 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
     && make develop sdist"
 
 # TOFIX Create alias for running cgcloud easily
-#echo '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | sudo tee -a /usr/bin/cgcloud
-#sudo chmod ugo+x /usr/bin/cgcloud
+printf '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | sudo tee -a /usr/bin/cgcloud
+sudo chmod ugo+x /usr/bin/cgcloud
 
 # Configure Hadoop and Spark
 # FIXME: JAVA_HOME is hard coded

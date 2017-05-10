@@ -1,2 +1,2 @@
-all: ompcloud-install-release-ubuntu.sh
-	./ompcloud-install-release-ubuntu.sh
+all: ompcloud-install-release.sh
+	./ompcloud-install-release.sh -ri $(pwd)
