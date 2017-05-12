@@ -42,6 +42,7 @@ if [ $OP == "-r" ]; then
     fi
 
     SUDO=""
+    JAVA_VERSION="7"
     export OMPCLOUD_RI_PREFIX="/opt/release"
     export LIBHDFS3_INCLUDE_LINK="/usr/local/include/hdfs"
 
@@ -71,6 +72,7 @@ else
         SUDO="sudo"
         DOCKER=0
     fi
+    JAVA_VERSION="8"
 
     export CGCLOUD_HOME="$OMPCLOUD_RI_PREFIX/cgcloud"
 
@@ -125,7 +127,7 @@ else
     export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
 fi
 
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
+export JAVA_HOME="/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64/"
 
 # Install needed package
 $SUDO apt-get update && \
@@ -148,7 +150,7 @@ $SUDO apt-get clean all && \
 $SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
   libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
   libboost-all-dev libssh-dev libelf-dev libffi-dev sbt \
-  openssh-server git openjdk-7-jre-headless
+  openssh-server git openjdk-$JAVA_VERSION-jre-headless
 
 if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
     $SUDO apt-get install -y  wget python-pip
