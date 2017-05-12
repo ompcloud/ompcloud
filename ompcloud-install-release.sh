@@ -36,7 +36,7 @@ if [ $OP == "-r" ]; then
     if [ ! -d "/io" ]; then
         echo "Entering ubuntu docker"
 
-        sudo docker run -t -i --rm -v $(realpath $BASEDIR):/io ubuntu:latest /io/ompcloud-install-release.sh -r $VERSION
+        sudo docker run -t -i --rm -v $(realpath $BASEDIR):/io ubuntu:14.04 /io/ompcloud-install-release.sh -r $VERSION
 
         exit
     fi
@@ -148,7 +148,7 @@ $SUDO apt-get clean all && \
 $SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
   libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
   libboost-all-dev libssh-dev libelf-dev libffi-dev sbt \
-  openssh-server git openjdk-8-jre-headless
+  openssh-server git openjdk-7-jre-headless
 
 if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
     $SUDO apt-get install -y  wget python-pip
