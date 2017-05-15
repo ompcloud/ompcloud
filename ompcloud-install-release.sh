@@ -4,21 +4,29 @@ set -e
 
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
-if [ $# -eq 0 ]; then
-    echo "ERROR: No operation mode especified"
+function print_usage {
     echo "Usage: $0 <-r || -i> [<version>]"
     echo "      -r <version>: Generate release tarball of ompcloud"
-    echo "      -i [<install-dir>]: Install ompcloud in current system"
-    echo "      -ri [<install-dir>]: Install ompcloud from release"
+    echo "      -i [<install-dir>]: Install OmpCloud in current system"
+    echo "      -ri [<install-dir>]: Install OmpCloud from release"
+    echo "      -h: Print this help"
+}
+
+if [ $# -eq 0 ]; then
+    echo "ERROR: No operation mode especified"
+    print_usage
     exit
 elif [ $# -eq 1 ]; then
-    if [ $1 == "-r" ]; then
+    if [ $1 == "-h" ]; then
+        print_usage
+        exit
+    elif [ $1 == "-r" ]; then
         echo "ERROR: No version for especified for the release"
-        echo "Usage: $0 -r <version>"
+        print_usage
         exit
     elif [ $1 != "-i" ] || [ $1 != "-ri" ]; then
         echo "ERROR: Unknown operation mode"
-        echo "Usage: $0 <-r||-i||-ri> [<version>]"
+        print_usage
         exit
     fi
 fi
