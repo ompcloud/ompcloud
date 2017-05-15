@@ -1,0 +1,10 @@
+
+[AzureProvider]
+Cluster=ompcloud
+StorageAccount=ompcloudstock
+
+[HDFS]
+WorkingDir=/user/hyviquel/cloud_test_new
+
+[Spark]
+User=sshuser
