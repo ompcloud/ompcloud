@@ -80,8 +80,6 @@ else
         DOCKER=0
     fi
 
-    export CGCLOUD_HOME="$OMPCLOUD_RI_PREFIX/cgcloud"
-
     export OMPCLOUD_CONF_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-conf"
     export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-script"
 
@@ -101,8 +99,6 @@ else
     export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
     export OMPCLOUDTEST_SRC="$OMPCLOUD_RI_PREFIX/ompcloud-test"
     export OMPCLOUDTEST_BUILD="$OMPCLOUD_RI_PREFIX/ompcloud-test-build"
-
-    export CGCLOUD_PLUGINS="cgcloud.spark"
 
     export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin"
     export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
@@ -162,8 +158,7 @@ $SUDO apt-get install -y sbt
 
 if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
     $SUDO apt-get install -y  wget python-pip
-
-    $SUDO pip install s3cmd virtualenv virtualenvwrapper
+    $SUDO pip install s3cmd
 fi
 
 if [ $OP == "-ri" ]; then
@@ -278,22 +273,6 @@ else
         cp $REAL_BASEDIR/conf-hdfs/hdfs-site.xml $HADOOP_CONF
         cp $REAL_BASEDIR/conf-hdfs/config $HOME/.ssh
     fi
-
-    # Configure SSH
-    #ssh-keygen -q -N "" -t rsa -f ~/.ssh/id_rsa
-    #cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
-
-    # Install cgcloud
-    git clone -b spark-2.0 git://github.com/hyviquel/cgcloud.git $CGCLOUD_HOME
-    /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh \
-        && cd $CGCLOUD_HOME \
-        && mkvirtualenv cgcloud \
-        && workon cgcloud \
-        && make develop sdist"
-
-    # TOFIX Create alias for running cgcloud easily
-    $SUDO printf '#!/bin/bash\n$WORKON_HOME/cgcloud/bin/cgcloud $@' | $SUDO tee -a /usr/bin/cgcloud
-    $SUDO chmod ugo+x /usr/bin/cgcloud
 
     # Configure Hadoop and Spark
     # FIXME: JAVA_HOME is hard coded
