@@ -284,9 +284,4 @@ else
 
     # Prebuild Unibench
     git clone git://github.com/ompcloud/UniBench.git $UNIBENCH_SRC
-    mkdir $UNIBENCH_BUILD
-    cd $UNIBENCH_BUILD
-    export CC=$LLVM_BUILD/bin/clang
-    cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release -DRUN_TEST=OFF -DRUN_BENCHMARK=ON -DCMAKE_BUILD_TYPE=Release
-    make experiments
 fi
