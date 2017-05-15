@@ -155,7 +155,7 @@ fi
 $SUDO apt-get install -y sbt
 
 if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
-    $SUDO apt-get install -y  wget python-pip
+    $SUDO apt-get install -y wget python-pip
     $SUDO pip install s3cmd
 fi
 
