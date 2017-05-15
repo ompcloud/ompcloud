@@ -41,19 +41,15 @@ REAL_BASEDIR="$(realpath $BASEDIR)"
 # Operation mode
 OP=$1
 
+SUDO=''
+if (( $EUID != 0 )); then
+  SUDO='sudo'
+fi
+
 if [ $OP == "-r" ]; then
     # Version of release
     VERSION=$2
 
-    if [ ! -d "/io" ]; then
-        echo "Entering ubuntu docker"
-
-        sudo docker run -t -i --rm -v $(realpath $BASEDIR):/io ubuntu:latest /io/ompcloud-install-release.sh -r $VERSION
-
-        exit
-    fi
-
-    SUDO=""
     export OMPCLOUD_RI_PREFIX="/opt/release"
     export LIBHDFS3_INCLUDE_LINK="/usr/local/include/hdfs"
 
@@ -71,12 +67,10 @@ if [ $OP == "-r" ]; then
     export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 else
     export OMPCLOUD_RI_PREFIX="$2"
-    
+
     if [ $# -eq 3 ] && [ $3 == "-d" ]; then
-        SUDO=""
         DOCKER=1
     else
-        SUDO="sudo"
         DOCKER=0
     fi
 
@@ -128,36 +122,6 @@ else
 fi
 
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
-
-# Install needed package
-$SUDO apt-get update && \
-  $SUDO apt-get install -y apt-utils apt-transport-https
-
-$SUDO apt-get clean all && \
-  $SUDO apt-get update && \
-  $SUDO apt-get upgrade -y
-
-# Default Java 9 does not seem to be compatible with SBT
-$SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
-  libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
-  libboost-all-dev libssh-dev libelf-dev libffi-dev git \
-  openssh-server openjdk-8-jre-headless
-
-sbt_list="/etc/apt/sources.list.d/sbt.list"
-if [ -f "$sbt_list" ]
-then
-	echo "Sbt repository is already in apt sources list."
-else
-  echo "deb https://dl.bintray.com/sbt/debian /" | $SUDO tee -a $sbt_list
-  $SUDO apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  $SUDO apt-get update
-fi
-$SUDO apt-get install -y sbt
-
-if [ $OP == "-i" ] || [ $OP == "-ri" ]; then
-    $SUDO apt-get install -y wget python-pip
-    $SUDO pip install s3cmd
-fi
 
 if [ $OP == "-ri" ]; then
     cp -R $REAL_BASEDIR/local $HOME/.ivy2/
@@ -251,14 +215,6 @@ if [ $OP == "-r" ]; then
     ## Get tarball from docker
     mv $RELEASE_DIR.tar.gz /io/
 else
-    # Install openmp
-    git clone git://github.com/llvm-mirror/openmp.git $OPENMP_SRC
-    mkdir $OPENMP_BUILD
-    cd $OPENMP_BUILD
-    cmake -DCMAKE_BUILD_TYPE=Release $OPENMP_SRC
-    make $MAKE_ARGS
-    $SUDO make install
-
     # Install hadoop and spark
     wget -nv -P $OMPCLOUD_RI_PREFIX $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
     wget -nv -P $OMPCLOUD_RI_PREFIX $HADOOP_REPO/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz

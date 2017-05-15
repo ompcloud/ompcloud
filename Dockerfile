@@ -52,13 +52,15 @@ ENV WORKON_HOME $INSTALL_DIR/virtualenvs
 ENV CGCLOUD_PLUGINS cgcloud.spark
 ENV CGCLOUD_ME ompcloud-user
 
-ENV PATH $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin
-ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
-ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:/usr/local/lib
+ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH
+ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH
+ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH
 
-COPY ompcloud-install-release.sh /
-
-RUN ./ompcloud-install-release.sh -i $INSTALL_DIR -d
+COPY ompcloud-install-release.sh /tmp/
+COPY ompcloud-install-dep.sh /tmp/
+RUN chmod +x /tmp/ompcloud-install-dep.sh /tmp/ompcloud-install-release.sh
+RUN /tmp/ompcloud-install-dep.sh
+RUN /tmp/ompcloud-install-release.sh -i $INSTALL_DIR -d
 
 RUN mkdir $OMPCLOUD_CONF_DIR
 COPY conf/ $OMPCLOUD_CONF_DIR
