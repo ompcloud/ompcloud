@@ -98,9 +98,9 @@ else
     export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
     export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
 
-    export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin"
-    export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
-    export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib:/lib/x86_64-linux-gnu"
+    export PATH="$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH"
+    export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH"
 fi
 
 export MAKE_ARGS="-j4"
