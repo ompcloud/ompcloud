@@ -21,13 +21,17 @@ elif [ $# -eq 1 ]; then
         print_usage
         exit
     elif [ $1 == "-r" ]; then
-        echo "ERROR: No version for especified for the release"
+        echo "ERROR: Need to specify the release version number"
         print_usage
         exit
     elif [ $1 != "-i" ] || [ $1 != "-ri" ]; then
         echo "ERROR: Unknown operation mode"
         print_usage
         exit
+    else
+      echo "ERROR: Need to specify the installation directory"
+      print_usage
+      exit
     fi
 fi
 
@@ -66,12 +70,8 @@ if [ $OP == "-r" ]; then
     export OMPCLOUD_SCRIPT_DIR_R="$RELEASE_DIR/ompcloud-script"
     export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 else
-    if [ $# -ge 2 ]; then
-        export OMPCLOUD_RI_PREFIX="$2"
-    else
-        export OMPCLOUD_RI_PREFIX="/home/ubuntu/workspace"
-    fi
-
+    export OMPCLOUD_RI_PREFIX="$2"
+    
     if [ $# -eq 3 ] && [ $3 == "-d" ]; then
         SUDO=""
         DOCKER=1
