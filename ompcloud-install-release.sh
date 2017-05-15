@@ -97,8 +97,6 @@ else
     export OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
     export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
     export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
-    export OMPCLOUDTEST_SRC="$OMPCLOUD_RI_PREFIX/ompcloud-test"
-    export OMPCLOUDTEST_BUILD="$OMPCLOUD_RI_PREFIX/ompcloud-test-build"
 
     export PATH="$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin"
     export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:/usr/local/lib"
@@ -278,7 +276,7 @@ else
     # FIXME: JAVA_HOME is hard coded
     sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/\n:' $HADOOP_CONF/hadoop-env.sh
 
-    # TOFIX Create aliases for managining the HDFS server
+    # Create aliases for managining the HDFS server
     $SUDO bash -c "printf '#!/bin/bash\nstart-dfs.sh;start-yarn.sh' > /usr/bin/hdfs-start"
     $SUDO bash -c "printf '#!/bin/bash\nstop-yarn.sh;stop-dfs.sh' > /usr/bin/hdfs-stop"
     $SUDO bash -c "printf '#!/bin/bash\nhdfs-stop;rm -rf $OMPCLOUD_RI_PREFIX/hadoop/hdfs/datanode;hdfs namenode -format -force;hdfs-start' > /usr/bin/hdfs-reset"
