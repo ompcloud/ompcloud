@@ -5,6 +5,11 @@ MAINTAINER Hervé Yviquel <hyviquel@gmail.com>
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
+# Give children processes 5 minutes to timeout
+ENV KILL_PROCESS_TIMEOUT=300
+# Give all other processes (such as those which have been forked) 5 minutes to timeout
+ENV KILL_ALL_PROCESSES_TIMEOUT=300
+
 RUN rm -f /etc/service/sshd/down
 
 # Regenerate SSH host keys. baseimage-docker does not contain any, so you
