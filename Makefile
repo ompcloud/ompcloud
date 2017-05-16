@@ -8,4 +8,4 @@ all: ompcloud-install-dep.sh ompcloud-install-release.sh
 	./ompcloud-install-release.sh -i ${RELEASE_ARGS}
 
 release-linux64: ompcloud-install-dep.sh ompcloud-install-release.sh
-	docker run -t -i --rm -v $(current_dir):/io ubuntu:latest /bin/bash -c "/io/ompcloud-install-dep.sh; /io/ompcloud-install-release.sh -r ${RELEASE_ARGS}"
+	docker run -t -i --rm -v $(current_dir):/io ubuntu:16.04 /bin/bash -c "/io/ompcloud-install-dep.sh; /io/ompcloud-install-release.sh -r ${RELEASE_ARGS}"
