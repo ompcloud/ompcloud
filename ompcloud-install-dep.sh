@@ -43,6 +43,6 @@ else
   $SUDO apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
   $SUDO apt-get update
 fi
-$SUDO apt-get remove azure-cli
+$SUDO apt-get install -y azure-cli
 
 $SUDO pip install s3cmd
