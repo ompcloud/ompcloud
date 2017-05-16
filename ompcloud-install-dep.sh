@@ -20,6 +20,7 @@ $SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
   libboost-all-dev libssh-dev libelf-dev libffi-dev git \
   openssh-server openjdk-8-jre-headless wget python-pip libomp-dev
 
+# Install sbt after java to avoid configuration error
 sbt_list="/etc/apt/sources.list.d/sbt.list"
 if [ -f "$sbt_list" ]
 then
@@ -30,5 +31,18 @@ else
   $SUDO apt-get update
 fi
 $SUDO apt-get install -y sbt
+
+# Install Azure CLI 2.0
+az_list="/etc/apt/sources.list.d/azure-cli.list"
+if [ -f "$az_list" ]
+then
+	echo "Azure CLI repository is already in apt sources list."
+else
+  echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | \
+     $SUDO tee $az_list
+  $SUDO apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
+  $SUDO apt-get update
+fi
+$SUDO apt-get remove azure-cli
 
 $SUDO pip install s3cmd
