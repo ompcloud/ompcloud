@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export MAKE_ARGS="-j4"
+export MAKE_ARGS="-j2"
 
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
