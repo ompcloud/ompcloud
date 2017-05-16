@@ -149,6 +149,8 @@ fi
 if [ $OP == "-r" ]; then
     #OMPCloud
     mkdir -p $RELEASE_DIR
+    mkdir -p $RELEASE_DIR/bin
+    mkdir -p $RELEASE_DIR/lib
 
     cp -R $OMPCLOUD_CONF_DIR $RELEASE_DIR
     cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
@@ -158,11 +160,8 @@ if [ $OP == "-r" ]; then
     cp $OMPCLOUD_DIR/release/INSTALL $RELEASE_DIR
     cp $OMPCLOUD_DIR/release/Makefile $RELEASE_DIR
 
-    mkdir -p $RELEASE_DIR/bin
-    mkdir -p $INCLUDE_DIR
-
     # LLVM/Clang
-    cp $LLVM_BUILD/bin/ $RELEASE_DIR/
+    cp $LLVM_BUILD/bin $RELEASE_DIR/
     cd $LLVM_BUILD/lib/
     cp $(ls | fgrep .so) $RELEASE_DIR/lib/
     cp -R $LLVM_BUILD/lib/clang $RELEASE_DIR/lib/
