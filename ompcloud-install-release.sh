@@ -181,6 +181,7 @@ if [ $OP == "-r" ]; then
     cp -R $HOME/.ivy2/local $RELEASE_DIR
 
     cp $OMPCLOUD_DIR/ompcloud-install-release.sh $RELEASE_DIR
+    cp $OMPCLOUD_DIR/ompcloud-install-dep.sh $RELEASE_DIR
 
     cd $RELEASE_DIR
     ## Create tarball
