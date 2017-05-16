@@ -52,51 +52,42 @@ if [ $OP == "-r" ]; then
     VERSION=$2
 
     export OMPCLOUD_RI_PREFIX="/opt/release"
-    export LIBHDFS3_INCLUDE_LINK="/usr/local/include/hdfs"
-
     export OMPCLOUD_DIR="/io"
-    export OMPCLOUD_CONF_DIR="$OMPCLOUD_DIR/conf"
-    export OMPCLOUD_CONFHDFS_DIR="$OMPCLOUD_DIR/conf-hdfs"
-    export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_DIR/script"
-
-    export INSTALL_RELEASE_SCRIPT="$OMPCLOUD_DIR/ompcloud-install-release.sh"
 
     export RELEASE_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-$VERSION-linux-amd64"
-    export OMPCLOUD_CONF_DIR_R="$RELEASE_DIR/ompcloud-conf"
-    export OMPCLOUD_CONFHDFS_DIR_R="$RELEASE_DIR/conf-hdfs"
-    export OMPCLOUD_SCRIPT_DIR_R="$RELEASE_DIR/ompcloud-script"
-    export INCLUDE_DIR="$RELEASE_DIR/lib/clang/3.8.0"
 else
     export OMPCLOUD_RI_PREFIX="$2"
+    export OMPCLOUD_DIR="$OMPCLOUD_RI_PREFIX/ompcloud"
 
     if [ $# -eq 3 ] && [ $3 == "-d" ]; then
         DOCKER=1
     else
         DOCKER=0
     fi
-
-    export OMPCLOUD_CONF_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-conf"
-    export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-script"
-
-    export HADOOP_REPO="http://www-eu.apache.org"
-    export HADOOP_VERSION="2.7.3"
-    export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
-    export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
-
-    export SPARK_REPO="http://d3kbcqa49mib13.cloudfront.net"
-    export SPARK_VERSION="2.1.0"
-    export SPARK_HADOOP_VERSION="2.7"
-    export SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
-
-    export OPENMP_SRC="$OMPCLOUD_RI_PREFIX/openmp"
-    export OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
-    export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
-    export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
-
-    export PATH="$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH"
-    export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH"
-    export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH"
 fi
+
+export HADOOP_REPO="http://www-eu.apache.org"
+export HADOOP_VERSION="2.7.3"
+export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
+export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
+
+export SPARK_REPO="http://d3kbcqa49mib13.cloudfront.net"
+export SPARK_VERSION="2.1.0"
+export SPARK_HADOOP_VERSION="2.7"
+export SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
+
+export OPENMP_SRC="$OMPCLOUD_RI_PREFIX/openmp"
+export OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
+export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
+export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
+
+export PATH="$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH"
+export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH"
+export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH"
+
+export OMPCLOUD_CONF_DIR="$OMPCLOUD_DIR/conf"
+export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_DIR/script"
+export OMPCLOUD_CONFHDFS_DIR="$OMPCLOUD_DIR/conf-hdfs"
 
 export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
 export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
@@ -109,7 +100,6 @@ else
     export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
     export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
     export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
-    export CLANG_SRC="$LLVM_SRC/tools/clang"
     export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
     export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
     export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
@@ -124,7 +114,6 @@ fi
 mkdir -p $OMPCLOUD_RI_PREFIX
 
 if [ $OP == "-i" ] || [ $OP == "-r" ]; then
-
     # Install libhdfs3
     mkdir $LIBHDFS3_SRC
     git clone git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
@@ -138,7 +127,7 @@ if [ $OP == "-i" ] || [ $OP == "-r" ]; then
     fi
 
     if [ $OP == "-r" ]; then
-        ln -s $LIBHDFS3_SRC/src/client $LIBHDFS3_INCLUDE_LINK
+        ln -s $LIBHDFS3_SRC/src/client /usr/local/include/hdfs
     fi
 
     # Build libomptarget
@@ -150,7 +139,7 @@ if [ $OP == "-i" ] || [ $OP == "-r" ]; then
 
     # Build llvm/clang
     git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
-    git clone git://github.com/ompcloud/clang.git $CLANG_SRC
+    git clone git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
     mkdir $LLVM_BUILD
     cd $LLVM_BUILD
     cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release
@@ -160,14 +149,10 @@ fi
 if [ $OP == "-r" ]; then
     #OMPCloud
     mkdir -p $RELEASE_DIR
-    mkdir -p $OMPCLOUD_CONF_DIR_R
-    mkdir -p $OMPCLOUD_CONFHDFS_DIR_R
-    mkdir -p $OMPCLOUD_SCRIPT_DIR_R
 
-    cp -R $OMPCLOUD_CONF_DIR/* $OMPCLOUD_CONF_DIR_R
-    cp -R $OMPCLOUD_CONFHDFS_DIR/* $OMPCLOUD_CONFHDFS_DIR_R
-    cp -R $OMPCLOUD_SCRIPT_DIR/* $OMPCLOUD_SCRIPT_DIR_R
-
+    cp -R $OMPCLOUD_CONF_DIR $RELEASE_DIR
+    cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
+    cp -R $OMPCLOUD_SCRIPT_DIR $RELEASE_DIR
     cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
     cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
     cp $OMPCLOUD_DIR/release/INSTALL $RELEASE_DIR
@@ -176,14 +161,11 @@ if [ $OP == "-r" ]; then
     mkdir -p $RELEASE_DIR/bin
     mkdir -p $INCLUDE_DIR
 
-    # LLVM/Clang Binaries
-    cd $LLVM_BUILD/bin/
-    cp * $RELEASE_DIR/bin/
-
-    # LLVM/CLang libraries
+    # LLVM/Clang
+    cp $LLVM_BUILD/bin/ $RELEASE_DIR/
     cd $LLVM_BUILD/lib/
     cp $(ls | fgrep .so) $RELEASE_DIR/lib/
-    cp -R clang/3.8.0/include $INCLUDE_DIR
+    cp -R $LLVM_BUILD/lib/clang $RELEASE_DIR/lib/
 
     # Libomptarget libraries
     cd $LIBOMPTARGET_BUILD/lib/
@@ -192,15 +174,13 @@ if [ $OP == "-r" ]; then
     ## Libhdfs3 libraries
     cd $LIBHDFS3_BUILD/src/
     cp $(ls | fgrep .so) $RELEASE_DIR/lib/
-    ## mkdir $RELEASE_DIR/src
-    ##cp $LIBHDFS3_BUILD/src/*.so.* $RELEASE_DIR/src
 
     cd $OMPCLOUD_RI_PREFIX
 
     ## Data of org.llvm.openmp for sbt
     cp -R $HOME/.ivy2/local $RELEASE_DIR
 
-    cp $INSTALL_RELEASE_SCRIPT $RELEASE_DIR
+    cp $OMPCLOUD_DIR/ompcloud-install-release.sh $RELEASE_DIR
 
     cd $RELEASE_DIR
     ## Create tarball

@@ -13,13 +13,14 @@ RUN rm -f /etc/service/sshd/down
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 ENV INSTALL_DIR /opt
+ENV OMPCLOUD_DIR $INSTALL_DIR/ompcloud
 
 # Configuration options.
 ENV CGCLOUD_HOME $INSTALL_DIR/cgcloud
 ENV LIBHDFS3_SRC $INSTALL_DIR/libhdfs3
 ENV LIBHDFS3_BUILD $INSTALL_DIR/libhdfs3-build
-ENV OMPCLOUD_CONF_DIR $INSTALL_DIR/ompcloud-conf
-ENV OMPCLOUD_SCRIPT_DIR $INSTALL_DIR/ompcloud-script
+ENV OMPCLOUD_CONF_DIR $OMPCLOUD_DIR/conf
+ENV OMPCLOUD_SCRIPT_DIR $OMPCLOUD_DIR/script
 ENV CLOUD_TEMP /tmp/cloud
 ENV OMPCLOUD_CONF_PATH $OMPCLOUD_CONF_DIR/cloud_rtl.ini.local
 ENV LIBHDFS3_CONF $OMPCLOUD_CONF_DIR/hdfs-client.xml
@@ -48,28 +49,18 @@ ENV UNIBENCH_BUILD $INSTALL_DIR/Unibench-build
 ENV OMPCLOUDTEST_SRC $INSTALL_DIR/ompcloud-test
 ENV OMPCLOUDTEST_BUILD $INSTALL_DIR/ompcloud-test-build
 
-ENV WORKON_HOME $INSTALL_DIR/virtualenvs
-ENV CGCLOUD_PLUGINS cgcloud.spark
-ENV CGCLOUD_ME ompcloud-user
-
 ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH
 ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH
 ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH
 
-COPY ompcloud-install-release.sh /tmp/
-COPY ompcloud-install-dep.sh /tmp/
-RUN chmod +x /tmp/ompcloud-install-dep.sh /tmp/ompcloud-install-release.sh
-RUN /tmp/ompcloud-install-dep.sh
-RUN /tmp/ompcloud-install-release.sh -i $INSTALL_DIR -d
+COPY . $OMPCLOUD_DIR
+RUN chmod +x $OMPCLOUD_DIR/ompcloud-install-dep.sh $OMPCLOUD_DIR/ompcloud-install-release.sh
+RUN $OMPCLOUD_DIR/ompcloud-install-dep.sh
+RUN $OMPCLOUD_DIR/ompcloud-install-release.sh -i $INSTALL_DIR -d
 
-RUN mkdir $OMPCLOUD_CONF_DIR
-COPY conf/ $OMPCLOUD_CONF_DIR
 COPY conf-hdfs/core-site.xml $HADOOP_CONF
 COPY conf-hdfs/hdfs-site.xml $HADOOP_CONF
 COPY conf-hdfs/config /root/.ssh
-
-RUN mkdir $OMPCLOUD_SCRIPT_DIR
-COPY script/ $OMPCLOUD_SCRIPT_DIR
 RUN chmod +x $OMPCLOUD_SCRIPT_DIR/*
 
 ENV TERM xterm
