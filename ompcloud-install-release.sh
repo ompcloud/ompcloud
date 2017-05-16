@@ -1,6 +1,7 @@
 #!/bin/bash
-
 set -e
+
+export MAKE_ARGS="-j4"
 
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
@@ -97,23 +98,16 @@ else
     export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH"
 fi
 
-export MAKE_ARGS="-j4"
+export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
+export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
 
 if [ $OP == "-ri" ]; then
     export LIBHDFS3_BUILD="$REAL_BASEDIR"
-
-    export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
-    export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
-
     export LLVM_BUILD="$REAL_BASEDIR"
     export LIBOMPTARGET_BUILD="$REAL_BASEDIR"
 else
     export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
     export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
-
-    export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
-    export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
-
     export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
     export CLANG_SRC="$LLVM_SRC/tools/clang"
     export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
