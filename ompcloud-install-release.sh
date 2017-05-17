@@ -161,7 +161,7 @@ if [ $OP == "-r" ]; then
     cp $OMPCLOUD_DIR/release/Makefile $RELEASE_DIR
 
     # LLVM/Clang
-    cp $LLVM_BUILD/bin $RELEASE_DIR/
+    cp -R $LLVM_BUILD/bin $RELEASE_DIR/
     cd $LLVM_BUILD/lib/
     cp $(ls | fgrep .so) $RELEASE_DIR/lib/
     cp -R $LLVM_BUILD/lib/clang $RELEASE_DIR/lib/
