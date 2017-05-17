@@ -1,14 +1,4 @@
-[GenericProvider]
-Test=test
-
-[HDFS]
-HostName=localhost
-Port=8020
-User=root
-WorkingDir=/user/root/cloud_test
 
 [Spark]
-HostName=localhost
-Port=6066
-Mode=client
-AdditionalArgs=--driver-memory 4g --executor-memory 4g
+WorkingDir=/ompcloud_test
+AdditionalArgs=--driver-memory 4g

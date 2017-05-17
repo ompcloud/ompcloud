@@ -1,0 +1,12 @@
+
+[HdfsProvider]
+HostName=localhost
+Port=8020
+User=root
+
+[Spark]
+HostName=localhost
+Port=6066
+Mode=client
+WorkingDir=/ompcloud_test
+AdditionalArgs=--driver-memory 4g --executor-memory 4g
