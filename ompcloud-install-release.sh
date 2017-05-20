@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-export MAKE_ARGS="-j2"
+export MAKE_ARGS=""
 
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
@@ -53,8 +53,6 @@ if [ $OP == "-r" ]; then
 
     export OMPCLOUD_RI_PREFIX="/opt/release"
     export OMPCLOUD_DIR="/io"
-
-    export RELEASE_DIR="$OMPCLOUD_RI_PREFIX/ompcloud-$VERSION-linux-amd64"
 else
     export OMPCLOUD_RI_PREFIX="$2"
     export OMPCLOUD_DIR="$OMPCLOUD_RI_PREFIX/ompcloud"
@@ -146,49 +144,7 @@ if [ $OP == "-i" ] || [ $OP == "-r" ]; then
     make $MAKE_ARGS
 fi
 
-if [ $OP == "-r" ]; then
-    #OMPCloud
-    mkdir -p $RELEASE_DIR
-    mkdir -p $RELEASE_DIR/bin
-    mkdir -p $RELEASE_DIR/lib
-
-    cp -R $OMPCLOUD_CONF_DIR $RELEASE_DIR
-    cp -R $OMPCLOUD_CONFHDFS_DIR $RELEASE_DIR
-    cp -R $OMPCLOUD_SCRIPT_DIR $RELEASE_DIR
-    cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
-    cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
-    cp $OMPCLOUD_DIR/release/INSTALL $RELEASE_DIR
-    cp $OMPCLOUD_DIR/release/Makefile $RELEASE_DIR
-
-    # LLVM/Clang
-    cp -R $LLVM_BUILD/bin $RELEASE_DIR/
-    cd $LLVM_BUILD/lib/
-    cp $(ls | fgrep .so) $RELEASE_DIR/lib/
-    cp -R $LLVM_BUILD/lib/clang $RELEASE_DIR/lib/
-
-    # Libomptarget libraries
-    cd $LIBOMPTARGET_BUILD/lib/
-    cp $(ls | fgrep .so) $RELEASE_DIR/lib/
-
-    ## Libhdfs3 libraries
-    cd $LIBHDFS3_BUILD/src/
-    cp $(ls | fgrep .so) $RELEASE_DIR/lib/
-
-    cd $OMPCLOUD_RI_PREFIX
-
-    ## Data of org.llvm.openmp for sbt
-    cp -R $HOME/.ivy2/local $RELEASE_DIR
-
-    cp $OMPCLOUD_DIR/ompcloud-install-release.sh $RELEASE_DIR
-    cp $OMPCLOUD_DIR/ompcloud-install-dep.sh $RELEASE_DIR
-
-    cd $RELEASE_DIR
-    ## Create tarball
-    tar -zcvf $RELEASE_DIR.tar.gz *
-
-    ## Get tarball from docker
-    mv $RELEASE_DIR.tar.gz /io/
-else
+if [ $OP != "-r" ]; then
     # Install hadoop and spark
     wget -nv -P $OMPCLOUD_RI_PREFIX $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
     wget -nv -P $OMPCLOUD_RI_PREFIX $HADOOP_REPO/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
