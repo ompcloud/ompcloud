@@ -22,6 +22,7 @@ cp -R $OMPCLOUD_DIR/conf $RELEASE_DIR
 cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
 cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
 cp $OMPCLOUD_DIR/release/ompcloud-setup-env.sh $RELEASE_DIR
+cp $OMPCLOUD_DIR/release/ompcloud-export-var.sh $RELEASE_DIR
 cp $OMPCLOUD_DIR/release/mat-mul.c $RELEASE_DIR/test
 
 # LLVM/Clang
