@@ -42,7 +42,7 @@ cp $(ls | fgrep .so) $RELEASE_DIR/lib/
 ## Data of org.llvm.openmp for sbt
 cp -R $HOME/.ivy2/local $RELEASE_DIR
 
-cp $OMPCLOUD_DIR/ompcloud-install-dep.sh $RELEASE_DIR
+cp $OMPCLOUD_DIR/install/ompcloud-install-dep.sh $RELEASE_DIR
 
 ## Create tarball
 cd $OMPCLOUD_RI_PREFIX

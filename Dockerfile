@@ -54,9 +54,9 @@ ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH
 ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH
 
 COPY . $OMPCLOUD_DIR
-RUN chmod +x $OMPCLOUD_DIR/ompcloud-install-dep.sh $OMPCLOUD_DIR/ompcloud-install-release.sh
-RUN $OMPCLOUD_DIR/ompcloud-install-dep.sh
-RUN $OMPCLOUD_DIR/ompcloud-install-release.sh -i $INSTALL_DIR -d
+RUN chmod +x $OMPCLOUD_DIR/install/ompcloud-install-dep.sh $OMPCLOUD_DIR/install/ompcloud-install.sh
+RUN $OMPCLOUD_DIR/install/ompcloud-install-dep.sh
+RUN $OMPCLOUD_DIR/install/ompcloud-install.sh -i $INSTALL_DIR -d
 
 COPY conf-hdfs/core-site.xml $HADOOP_CONF
 COPY conf-hdfs/hdfs-site.xml $HADOOP_CONF
