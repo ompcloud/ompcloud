@@ -6,10 +6,9 @@ export MAKE_ARGS=""
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
 function print_usage {
-    echo "Usage: $0 <-r || -i> [<version>]"
-    echo "      -r <version>: Generate release tarball of ompcloud"
+    echo "Usage: $0 <-r || -i> [<install-dir>]"
+    echo "      -r : Install OmpCloud for releasing"
     echo "      -i [<install-dir>]: Install OmpCloud in current system"
-    echo "      -ri [<install-dir>]: Install OmpCloud from release"
     echo "      -h: Print this help"
 }
 
@@ -21,15 +20,7 @@ elif [ $# -eq 1 ]; then
     if [ $1 == "-h" ]; then
         print_usage
         exit
-    elif [ $1 == "-r" ]; then
-        echo "ERROR: Need to specify the release version number"
-        print_usage
-        exit
-    elif [ $1 != "-i" ] || [ $1 != "-ri" ]; then
-        echo "ERROR: Unknown operation mode"
-        print_usage
-        exit
-    else
+    elif [ $1 == "-i" ]; then
       echo "ERROR: Need to specify the installation directory"
       print_usage
       exit
@@ -48,9 +39,6 @@ if (( $EUID != 0 )); then
 fi
 
 if [ $OP == "-r" ]; then
-    # Version of release
-    VERSION=$2
-
     export OMPCLOUD_RI_PREFIX="/opt/release"
     export OMPCLOUD_DIR="/io"
 else
@@ -90,24 +78,14 @@ export OMPCLOUD_CONFHDFS_DIR="$OMPCLOUD_DIR/conf-hdfs"
 export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
 export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
 
-if [ $OP == "-ri" ]; then
-    export LIBHDFS3_BUILD="$REAL_BASEDIR"
-    export LLVM_BUILD="$REAL_BASEDIR"
-    export LIBOMPTARGET_BUILD="$REAL_BASEDIR"
-else
-    export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
-    export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
-    export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
-    export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
-    export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
-    export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
-fi
+export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
+export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
+export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
+export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
+export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
+export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
 
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
-
-if [ $OP == "-ri" ]; then
-    cp -R $REAL_BASEDIR/local $HOME/.ivy2/
-fi
 
 mkdir -p $OMPCLOUD_RI_PREFIX
 
