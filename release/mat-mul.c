@@ -4,7 +4,7 @@
 #define N 1000
 
 void MatMul(float *a, float *b, float *c) {
-  #pragma omp target map(to: a[:N*N], b[N*N]) map(from : c[N*N]) device(0)
+  #pragma omp target map(to: a[:N*N], b[:N*N]) map(from : c[:N*N]) device(0)
   #pragma omp parallel for
   for (int i = 0; i < N; ++i) {
     for (int j = 0; j < N; ++j) {
