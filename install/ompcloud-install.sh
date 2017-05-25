@@ -92,7 +92,7 @@ mkdir -p $OMPCLOUD_RI_PREFIX
 if [ $OP == "-i" ] || [ $OP == "-r" ]; then
     # Install libhdfs3
     mkdir $LIBHDFS3_SRC
-    git clone git://github.com/Pivotal-Data-Attic/pivotalrd-libhdfs3.git $LIBHDFS3_SRC
+    git clone git://github.com/ompcloud/libhdfs3.git $LIBHDFS3_SRC
     mkdir $LIBHDFS3_BUILD
     cd $LIBHDFS3_BUILD
     cmake $LIBHDFS3_SRC
