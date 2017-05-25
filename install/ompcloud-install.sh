@@ -95,16 +95,9 @@ if [ $OP == "-i" ] || [ $OP == "-r" ]; then
     git clone git://github.com/ompcloud/libhdfs3.git $LIBHDFS3_SRC
     mkdir $LIBHDFS3_BUILD
     cd $LIBHDFS3_BUILD
-    cmake $LIBHDFS3_SRC
+    cmake $LIBHDFS3_SRC -DCMAKE_BUILD_TYPE=Release
     make $MAKE_ARGS
-
-    if [ $OP == "-i" ]; then
-        $SUDO make install
-    fi
-
-    if [ $OP == "-r" ]; then
-        ln -s $LIBHDFS3_SRC/src/client /usr/local/include/hdfs
-    fi
+    $SUDO make install
 
     # Build libomptarget
     git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
