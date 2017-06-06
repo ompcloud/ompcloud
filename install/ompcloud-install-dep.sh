@@ -17,8 +17,8 @@ $SUDO apt-get clean all && \
 # Default Java 9 does not seem to be compatible with SBT
 $SUDO apt-get install -y gcc g++ cmake libxml2-dev uuid-dev \
   libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
-  libboost-all-dev libssh-dev libelf-dev libffi-dev git \
-  openssh-server openjdk-8-jre-headless wget python-pip libomp-dev
+  libboost-all-dev libssh-dev libelf-dev libffi-dev \
+  openjdk-8-jre-headless python-pip
 
 # Install sbt after java to avoid configuration error
 sbt_list="/etc/apt/sources.list.d/sbt.list"

@@ -109,6 +109,7 @@ if [ $OP == "-i" ] || [ $OP == "-r" ]; then
     # Build llvm/clang
     git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
     git clone git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
+    git clone -b release_38 git://github.com/llvm-mirror/openmp.git $LLVM_SRC/projects/openmp
     mkdir $LLVM_BUILD
     cd $LLVM_BUILD
     cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCLANG_VENDOR="OmpCloud"
