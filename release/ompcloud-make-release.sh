@@ -17,9 +17,9 @@ mkdir -p $RELEASE_DIR
 mkdir -p $RELEASE_DIR/bin
 mkdir -p $RELEASE_DIR/lib
 mkdir -p $RELEASE_DIR/test
+mkdir -p $RELEASE_DIR/licences
 
 cp -R $OMPCLOUD_DIR/conf $RELEASE_DIR
-cp $OMPCLOUD_DIR/LICENSE $RELEASE_DIR
 cp $OMPCLOUD_DIR/README.md $RELEASE_DIR
 cp $OMPCLOUD_DIR/release/ompcloud-setup-env.sh $RELEASE_DIR
 cp $OMPCLOUD_DIR/release/ompcloud-export-var.sh $RELEASE_DIR
@@ -30,13 +30,16 @@ cp -R $OMPCLOUD_RI_PREFIX/llvm-build/bin $RELEASE_DIR/
 cd $OMPCLOUD_RI_PREFIX/llvm-build/lib/
 cp $(ls | fgrep .so) $RELEASE_DIR/lib/
 cp -R $OMPCLOUD_RI_PREFIX/llvm-build/lib/clang $RELEASE_DIR/lib/
+cp $OMPCLOUD_RI_PREFIX/llvm/LICENSE.TXT $RELEASE_DIR/licences/LICENSE-llvm.txt
 
 # Libomptarget libraries
 cd $OMPCLOUD_RI_PREFIX/libomptarget-build/lib/
 cp $(ls | fgrep .so) $RELEASE_DIR/lib/
+cp $OMPCLOUD_RI_PREFIX/libomptarget/RTLs/cloud/inih/LICENSE.txt $RELEASE_DIR/licences/LICENSE-inih.txt
 
 ## Libhdfs3 libraries
 cd $OMPCLOUD_RI_PREFIX/libhdfs3-build/src/
+cp $OMPCLOUD_RI_PREFIX/libhdfs3/LICENSE $RELEASE_DIR/licences/LICENSE-libhdfs3.txt
 cp $(ls | fgrep .so) $RELEASE_DIR/lib/
 
 ## Data of org.llvm.openmp for sbt
