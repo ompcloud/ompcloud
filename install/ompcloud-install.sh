@@ -89,32 +89,30 @@ export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
 mkdir -p $OMPCLOUD_RI_PREFIX
 
-if [ $OP == "-i" ] || [ $OP == "-r" ]; then
-    # Install libhdfs3
-    mkdir $LIBHDFS3_SRC
-    git clone git://github.com/ompcloud/libhdfs3.git $LIBHDFS3_SRC
-    mkdir $LIBHDFS3_BUILD
-    cd $LIBHDFS3_BUILD
-    cmake $LIBHDFS3_SRC -DCMAKE_BUILD_TYPE=Release
-    make $MAKE_ARGS
-    $SUDO make install
+# Install libhdfs3
+mkdir $LIBHDFS3_SRC
+git clone git://github.com/ompcloud/libhdfs3.git $LIBHDFS3_SRC
+mkdir $LIBHDFS3_BUILD
+cd $LIBHDFS3_BUILD
+cmake $LIBHDFS3_SRC -DCMAKE_BUILD_TYPE=Release
+make $MAKE_ARGS
+$SUDO make install
 
-    # Build libomptarget
-    git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
-    mkdir $LIBOMPTARGET_BUILD
-    cd $LIBOMPTARGET_BUILD
-    cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC
-    make $MAKE_ARGS
+# Build libomptarget
+git clone git://github.com/ompcloud/libomptarget.git $LIBOMPTARGET_SRC
+mkdir $LIBOMPTARGET_BUILD
+cd $LIBOMPTARGET_BUILD
+cmake -DCMAKE_BUILD_TYPE=Debug $LIBOMPTARGET_SRC
+make $MAKE_ARGS
 
-    # Build llvm/clang
-    git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
-    git clone git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
-    git clone -b release_38 git://github.com/llvm-mirror/openmp.git $LLVM_SRC/projects/openmp
-    mkdir $LLVM_BUILD
-    cd $LLVM_BUILD
-    cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCLANG_VENDOR="OmpCloud"
-    make $MAKE_ARGS
-fi
+# Build llvm/clang
+git clone git://github.com/ompcloud/llvm.git $LLVM_SRC
+git clone git://github.com/ompcloud/clang.git $LLVM_SRC/tools/clang
+git clone -b release_38 git://github.com/llvm-mirror/openmp.git $LLVM_SRC/projects/openmp
+mkdir $LLVM_BUILD
+cd $LLVM_BUILD
+cmake $LLVM_SRC -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCLANG_VENDOR="OmpCloud" -DLLVM_BUILD_TOOLS=OFF
+make $MAKE_ARGS
 
 if [ $OP != "-r" ]; then
     # Install hadoop and spark
