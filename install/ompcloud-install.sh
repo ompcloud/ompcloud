@@ -67,25 +67,12 @@ export OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
 export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
 export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
 
-export PATH="$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$PATH"
-export LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH"
-export LD_LIBRARY_PATH="$LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH"
-
-export OMPCLOUD_CONF_DIR="$OMPCLOUD_DIR/conf"
-export OMPCLOUD_SCRIPT_DIR="$OMPCLOUD_DIR/script"
-export OMPCLOUD_CONFHDFS_DIR="$OMPCLOUD_DIR/conf-hdfs"
-
-export OMPCLOUD_CONF_PATH="$OMPCLOUD_CONF_DIR/cloud_rtl.ini.local"
-export LIBHDFS3_CONF="$OMPCLOUD_CONF_DIR/hdfs-client.xml"
-
 export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
 export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
 export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
 export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
 export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
 export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
-
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 
 mkdir -p $OMPCLOUD_RI_PREFIX
 
