@@ -65,6 +65,11 @@ COPY conf-hdfs/hdfs-site.xml $HADOOP_CONF
 COPY conf-hdfs/config /root/.ssh
 RUN chmod +x $OMPCLOUD_SCRIPT_DIR/*
 
+# Configure SSH
+RUN ssh-keygen -q -N "" -t rsa -f ~/.ssh/id_rsa
+RUN cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+RUN service ssh start
+
 ENV TERM xterm
 
 # Clean up APT when done.
