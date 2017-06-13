@@ -34,8 +34,6 @@ export CC=$TESTED_CC
 
 if [ "$RESET" = true ]; then
   echo "-- RESET OLD EXECUTION --"
-  # Initialize HDFS server
-  hdfs-reset
   rm -rf $UNIBENCH_BUILD_TEST
 fi
 
