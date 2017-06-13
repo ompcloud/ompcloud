@@ -2,7 +2,7 @@
 [AzureProvider]
 Cluster=ompcloud
 StorageAccount=ompcloudstock
-
 [Spark]
 User=sshuser
 WorkingDir=/ompcloud_test
+AdditionalArgs=--executor-memory 15g --driver-memory 15g --driver-cores 8 --executor-cores 8
