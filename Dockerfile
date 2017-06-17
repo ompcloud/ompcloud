@@ -52,11 +52,12 @@ ENV OMPCLOUDTEST_BUILD $INSTALL_DIR/ompcloud-test-build
 ENV PATH $HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$LLVM_BUILD/bin:$PATH
 ENV LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LIBRARY_PATH
 ENV LD_LIBRARY_PATH $LIBOMPTARGET_BUILD/lib:$LD_LIBRARY_PATH
+ENV CPATH $LLVM_BUILD/projects/openmp/runtime/src:$CPATH
 
 COPY . $OMPCLOUD_DIR
 RUN chmod +x $OMPCLOUD_DIR/install/ompcloud-install-dep.sh $OMPCLOUD_DIR/install/ompcloud-install.sh
 RUN $OMPCLOUD_DIR/install/ompcloud-install-dep.sh
-RUN apt-get install -y openssh-server git wget gcc g++ cmake libomp-dev
+RUN apt-get install -y openssh-server git wget gcc g++ cmake
 
 RUN $OMPCLOUD_DIR/install/ompcloud-install.sh -i $INSTALL_DIR -d
 

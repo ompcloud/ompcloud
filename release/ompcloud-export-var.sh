@@ -10,6 +10,7 @@ REAL_BASEDIR="$(realpath $BASEDIR)"
 export PATH="$REAL_BASEDIR/sbin:$REAL_BASEDIR/bin:$PATH"
 export LIBRARY_PATH="$REAL_BASEDIR/lib:$LIBRARY_PATH"
 export LD_LIBRARY_PATH="$REAL_BASEDIR/lib:$LD_LIBRARY_PATH"
+export CPATH="$REAL_BASEDIR/include:$CPATH"
 
 # Set OmpCloud environment variables
 export OMPCLOUD_CONF_PATH="$REAL_BASEDIR/conf/cloud_rtl.ini.local"

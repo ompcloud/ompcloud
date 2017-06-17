@@ -16,6 +16,7 @@ mkdir -p $OMPCLOUD_RI_PREFIX
 mkdir -p $RELEASE_DIR
 mkdir -p $RELEASE_DIR/bin
 mkdir -p $RELEASE_DIR/lib
+mkdir -p $RELEASE_DIR/include
 mkdir -p $RELEASE_DIR/test
 mkdir -p $RELEASE_DIR/licences
 
@@ -29,6 +30,7 @@ cp $OMPCLOUD_DIR/release/mat-mul.c $RELEASE_DIR/test
 cp -R $OMPCLOUD_RI_PREFIX/llvm-build/bin $RELEASE_DIR/
 cd $OMPCLOUD_RI_PREFIX/llvm-build/lib/
 cp $(ls | fgrep .so) $RELEASE_DIR/lib/
+cp $OMPCLOUD_RI_PREFIX/llvm-build/projects/openmp/runtime/src/omp.h $RELEASE_DIR/include/
 cp -R $OMPCLOUD_RI_PREFIX/llvm-build/lib/clang $RELEASE_DIR/lib/
 cp $OMPCLOUD_RI_PREFIX/llvm/LICENSE.TXT $RELEASE_DIR/licences/LICENSE-llvm.txt
 
