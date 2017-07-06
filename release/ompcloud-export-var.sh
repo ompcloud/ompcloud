@@ -13,7 +13,7 @@ export LD_LIBRARY_PATH="$REAL_BASEDIR/lib:$LD_LIBRARY_PATH"
 export CPATH="$REAL_BASEDIR/include:$CPATH"
 
 # Set OmpCloud environment variables
-export OMPCLOUD_CONF_PATH="$REAL_BASEDIR/conf/cloud_rtl.ini.local"
+export OMPCLOUD_CONF_PATH="$REAL_BASEDIR/conf/cloud_local.ini"
 export LIBHDFS3_CONF="$REAL_BASEDIR/conf/hdfs-client.xml"
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
