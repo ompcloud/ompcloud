@@ -58,7 +58,7 @@ export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
 export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 
 export SPARK_REPO="http://d3kbcqa49mib13.cloudfront.net"
-export SPARK_VERSION="2.1.0"
+export SPARK_VERSION="2.2.0"
 export SPARK_HADOOP_VERSION="2.7"
 export SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
 
