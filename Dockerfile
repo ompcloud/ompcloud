@@ -27,8 +27,8 @@ ENV LIBHDFS3_CONF $OMPCLOUD_CONF_DIR/hdfs-client.xml
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 
-ENV HADOOP_REPO http://www-eu.apache.org
-ENV HADOOP_VERSION 2.7.3
+ENV HADOOP_REPO http://apache.mirrors.tds.net
+ENV HADOOP_VERSION 2.7.4
 ENV HADOOP_HOME $INSTALL_DIR/hadoop-$HADOOP_VERSION
 ENV HADOOP_CONF $HADOOP_HOME/etc/hadoop
 

@@ -52,8 +52,8 @@ else
     fi
 fi
 
-export HADOOP_REPO="http://www-eu.apache.org"
-export HADOOP_VERSION="2.7.3"
+export HADOOP_REPO="http://apache.mirrors.tds.net"
+export HADOOP_VERSION="2.7.4"
 export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
 export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 
