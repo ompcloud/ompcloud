@@ -104,7 +104,7 @@ make $MAKE_ARGS
 if [ $OP != "-r" ]; then
     # Install hadoop and spark
     wget -nv -P $OMPCLOUD_RI_PREFIX $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
-    wget -nv -P $OMPCLOUD_RI_PREFIX $HADOOP_REPO/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+    wget -nv -P $OMPCLOUD_RI_PREFIX $HADOOP_REPO/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
     cd $OMPCLOUD_RI_PREFIX
     tar -zxf $OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
     tar -zxf $OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
