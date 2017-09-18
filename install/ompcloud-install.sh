@@ -52,12 +52,12 @@ else
     fi
 fi
 
-export HADOOP_REPO="http://apache.mirrors.tds.net"
+export APACHE_MIRROR="http://apache.mirrors.tds.net"
+
 export HADOOP_VERSION="2.7.4"
 export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
 export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 
-export SPARK_REPO="http://d3kbcqa49mib13.cloudfront.net"
 export SPARK_VERSION="2.2.0"
 export SPARK_HADOOP_VERSION="2.7"
 export SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
@@ -103,8 +103,8 @@ make $MAKE_ARGS
 
 if [ $OP != "-r" ]; then
     # Install hadoop and spark
-    wget -nv -P $OMPCLOUD_RI_PREFIX $SPARK_REPO/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
-    wget -nv -P $OMPCLOUD_RI_PREFIX $HADOOP_REPO/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+    wget -nv -P $OMPCLOUD_RI_PREFIX $APACHE_MIRROR/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
+    wget -nv -P $OMPCLOUD_RI_PREFIX $APACHE_MIRROR/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
     cd $OMPCLOUD_RI_PREFIX
     tar -zxf $OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION.tgz
     tar -zxf $OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION.tar.gz
