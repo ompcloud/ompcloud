@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-export MAKE_ARGS=""
-
 function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
 
 function print_usage {
