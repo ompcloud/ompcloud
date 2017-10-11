@@ -16,6 +16,15 @@ then
     $SUDO apt-get update && \
     $SUDO apt-get upgrade -y
 
+  if [[ `lsb_release -rs` == "14.04" ]]
+  then
+    # Java 8 is not in ubuntu 14.04 official repository
+    $SUDO add-apt-repository -y ppa:openjdk-r/ppa
+    $SUDO apt-get update
+    # fix error certification: https://github.com/sbt/sbt/issues/2536#issuecomment-284153103
+    $SUDO /var/lib/dpkg/info/ca-certificates-java.postinst configure
+  fi
+
   # Default Java 9 does not seem to be compatible with SBT
   $SUDO apt-get install -y libxml2-dev uuid-dev \
     libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
@@ -26,7 +35,7 @@ then
   sbt_list="/etc/apt/sources.list.d/sbt.list"
   if [ -f "$sbt_list" ]
   then
-  	echo "Sbt repository is already in apt sources list."
+    echo "Sbt repository is already in apt sources list."
   else
     echo "deb https://dl.bintray.com/sbt/debian /" | $SUDO tee -a $sbt_list
     $SUDO apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
@@ -38,10 +47,10 @@ then
   az_list="/etc/apt/sources.list.d/azure-cli.list"
   if [ -f "$az_list" ]
   then
-  	echo "Azure CLI repository is already in apt sources list."
+    echo "Azure CLI repository is already in apt sources list."
   else
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | \
-       $SUDO tee $az_list
+      $SUDO tee $az_list
     $SUDO apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
     $SUDO apt-get update
   fi
@@ -56,7 +65,7 @@ then
   sbt_repo="/etc/yum.repos.d/bintray-sbt-rpm.repo"
   if [ -f "$sbt_repo" ]
   then
-  	echo "Sbt repository is already in yum repo list."
+    echo "Sbt repository is already in yum repo list."
   else
     curl https://bintray.com/sbt/rpm/rpm | $SUDO tee $sbt_repo
     $SUDO yum -y install sbt
@@ -66,7 +75,7 @@ then
   az_repo="/etc/yum.repos.d/azure-cli.repo"
   if [ -f "$az_repo" ]
   then
-  	echo "Azure CLI repository is already in yum repo list."
+    echo "Azure CLI repository is already in yum repo list."
   else
   $SUDO echo "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | \
     $SUDO tee $az_repo
