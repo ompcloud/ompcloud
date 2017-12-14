@@ -27,7 +27,7 @@ then
 
   # Default Java 9 does not seem to be compatible with SBT
   $SUDO apt-get install -y libxml2-dev uuid-dev \
-    libprotobuf-dev protobuf-compiler libgsasl7-dev libkrb5-dev \
+    libgsasl7-dev libkrb5-dev \
     libssh-dev libelf-dev libffi-dev \
     openjdk-8-jre-headless python-pip
 

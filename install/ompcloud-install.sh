@@ -74,6 +74,15 @@ export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
 
 mkdir -p $OMPCLOUD_RI_PREFIX
 
+# Install protobuf (static compilation)
+cd $OMPCLOUD_RI_PREFIX
+wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
+tar -xf protobuf-2.6.1.tar.gz
+cd protobuf-2.6.1
+./configure --disable-shared "CFLAGS=-fPIC" "CXXFLAGS=-fPIC"
+make $MAKE_ARGS
+$SUDO make install
+
 # Install libhdfs3
 mkdir $LIBHDFS3_SRC
 git clone git://github.com/ompcloud/libhdfs3.git $LIBHDFS3_SRC
