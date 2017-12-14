@@ -77,7 +77,7 @@ mkdir -p $OMPCLOUD_RI_PREFIX
 # Install protobuf (static compilation)
 cd $OMPCLOUD_RI_PREFIX
 wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
-tar -xf protobuf-2.6.1.tar.gz
+tar --no-same-owner -xzf protobuf-2.6.1.tar.gz
 cd protobuf-2.6.1
 ./configure --disable-shared "CFLAGS=-fPIC" "CXXFLAGS=-fPIC"
 make $MAKE_ARGS
