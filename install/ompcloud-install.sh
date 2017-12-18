@@ -72,6 +72,10 @@ export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
 export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
 export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
 
+if [ $OP = "-r" ]; then
+    export LDFLAGS="$LDFLAGS -static-libstdc++"
+fi
+
 mkdir -p $OMPCLOUD_RI_PREFIX
 
 # Install protobuf (static compilation)
