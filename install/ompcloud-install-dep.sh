@@ -77,8 +77,8 @@ then
   then
     echo "Azure CLI repository is already in yum repo list."
   else
-  $SUDO echo "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | \
-    $SUDO tee $az_repo
+    printf "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | \
+      $SUDO tee -a $az_repo
   fi
   yum list updates
   $SUDO yum -y install azure-cli
