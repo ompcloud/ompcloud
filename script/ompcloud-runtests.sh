@@ -4,8 +4,8 @@
 # Any subsequent commands which fail will cause the script to exit immediately
 set -e
 
-UNIBENCH_BUILD_TEST="/opt/Unibench-build-test"
-TESTED_CC="$LLVM_BUILD/bin/clang"
+UNIBENCH_BUILD_TEST="$OMPCLOUD_INSTALL_DIR/Unibench-build-test"
+TESTED_CC="$OMPCLOUD_INSTALL_DIR/llvm-build/bin/clang"
 TEST_LIST="2,2,,2,4,5,6,7,8,15,16,18"
 
 QUICK=false
@@ -29,7 +29,6 @@ do
   shift # past argument or value
 done
 
-export UNIBENCH_BUILD_TEST=$UNIBENCH_BUILD_TEST
 export CC=$TESTED_CC
 
 if [ "$RESET" = true ]; then
@@ -40,7 +39,7 @@ fi
 # Build Unibench
 mkdir -p $UNIBENCH_BUILD_TEST
 cd $UNIBENCH_BUILD_TEST
-cmake $UNIBENCH_SRC -DCMAKE_BUILD_TYPE=Release -DRUN_TEST=ON
+cmake $OMPCLOUD_INSTALL_DIR/Unibench -DCMAKE_BUILD_TYPE=Release -DRUN_TEST=ON
 
 if [ "$QUICK" = true ]; then
   make mat-mul

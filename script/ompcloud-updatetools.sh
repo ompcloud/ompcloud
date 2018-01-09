@@ -6,15 +6,15 @@ set -e
 
 # Update LLVM/Clang
 echo "Update LLVM/Clang..."
-cd $LLVM_SRC; git pull
-cd $CLANG_SRC; git pull
-cd $LLVM_BUILD; make clang
+cd $OMPCLOUD_INSTALL_DIR/llvm; git pull
+cd $OMPCLOUD_INSTALL_DIR/llvm/tools/clang; git pull
+cd $OMPCLOUD_INSTALL_DIR/llvm-build; make clang
 
 # Update libomptarget
 echo "Update libomptarget..."
-cd $LIBOMPTARGET_SRC; git pull
-cd $LIBOMPTARGET_BUILD; make
+cd $OMPCLOUD_INSTALL_DIR/libomptarget; git pull
+cd $OMPCLOUD_INSTALL_DIR/libomptarget-build; make
 
 # Update Unibench
 echo "Update Unibench..."
-cd $UNIBENCH_SRC; git pull
+cd $OMPCLOUD_INSTALL_DIR/Unibench; git pull
