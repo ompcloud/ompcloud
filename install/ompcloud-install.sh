@@ -37,7 +37,7 @@ if (( $EUID != 0 )); then
 fi
 
 if [ $OP == "-r" ]; then
-    export OMPCLOUD_RI_PREFIX="/opt/release"
+    export OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
     export OMPCLOUD_DIR="/io"
 else
     export OMPCLOUD_RI_PREFIX="$2"

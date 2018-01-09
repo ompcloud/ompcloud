@@ -4,7 +4,7 @@ set -e
 # Version of release
 VERSION=$1
 
-OMPCLOUD_RI_PREFIX="/opt/release"
+OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
 OMPCLOUD_DIR="/io"
 
 RELEASE_NAME="ompcloud-$VERSION-linux-amd64"
