@@ -79,7 +79,7 @@ fi
 # Install building tools
 if [ -n "$(command -v apt-get)" ]
 then
-  $SUDO apt-get install build-essential cmake git wget
+  $SUDO apt-get install -y build-essential cmake git wget
 elif [ -n "$(command -v yum)" ]
 then
   $SUDO yum -y install gcc gcc-c++ make cmake git wget
