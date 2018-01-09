@@ -88,7 +88,7 @@ then
   $SUDO yum -y install azure-cli
 
 else
-  echo "Your package manager is not yet supported by this script."
+  echo "WARNING: Your package manager is not yet supported by this script."
 fi
 
 $SUDO pip install s3cmd

@@ -84,7 +84,7 @@ elif [ -n "$(command -v yum)" ]
 then
   $SUDO yum -y install gcc gcc-c++ make cmake git wget
 else
-  echo "Your package manager is not yet supported by this script."
+  echo "WARNING: your package manager is not yet supported by this script."
 fi
 
 mkdir -p $OMPCLOUD_RI_PREFIX
