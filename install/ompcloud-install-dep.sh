@@ -21,8 +21,6 @@ then
     # Java 8 is not in ubuntu 14.04 official repository
     $SUDO add-apt-repository -y ppa:openjdk-r/ppa
     $SUDO apt-get update
-    # fix error certification: https://github.com/sbt/sbt/issues/2536#issuecomment-284153103
-    $SUDO /var/lib/dpkg/info/ca-certificates-java.postinst configure
   fi
 
   # Default Java 9 does not seem to be compatible with SBT
@@ -30,6 +28,12 @@ then
     libgsasl7-dev libkrb5-dev \
     libssh-dev libelf-dev libffi-dev \
     openjdk-8-jre-headless python-pip
+
+  if [[ `lsb_release -rs` == "14.04" ]]
+  then
+    # fix error certification: https://github.com/sbt/sbt/issues/2536#issuecomment-284153103
+    $SUDO /var/lib/dpkg/info/ca-certificates-java.postinst configure
+  fi
 
   # Install sbt after java to avoid configuration error
   sbt_list="/etc/apt/sources.list.d/sbt.list"
