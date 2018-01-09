@@ -37,11 +37,11 @@ if (( $EUID != 0 )); then
 fi
 
 if [ $OP == "-r" ]; then
-    export OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
-    export OMPCLOUD_DIR="/io"
+    OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
+    OMPCLOUD_DIR="/io"
 else
-    export OMPCLOUD_RI_PREFIX="$2"
-    export OMPCLOUD_DIR="$OMPCLOUD_RI_PREFIX/ompcloud"
+    OMPCLOUD_RI_PREFIX="$2"
+    OMPCLOUD_DIR="$OMPCLOUD_RI_PREFIX/ompcloud"
 
     if [ $# -eq 3 ] && [ $3 == "-d" ]; then
         DOCKER=1
@@ -50,27 +50,27 @@ else
     fi
 fi
 
-export APACHE_MIRROR="http://apache.mirrors.tds.net"
+APACHE_MIRROR="http://apache.mirrors.tds.net"
 
-export HADOOP_VERSION="2.7.4"
-export HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
-export HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
+HADOOP_VERSION="2.7.4"
+HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
+HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 
-export SPARK_VERSION="2.2.0"
-export SPARK_HADOOP_VERSION="2.7"
-export SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
+SPARK_VERSION="2.2.0"
+SPARK_HADOOP_VERSION="2.7"
+SPARK_HOME="$OMPCLOUD_RI_PREFIX/spark-$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION"
 
-export OPENMP_SRC="$OMPCLOUD_RI_PREFIX/openmp"
-export OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
-export UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
-export UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
+OPENMP_SRC="$OMPCLOUD_RI_PREFIX/openmp"
+OPENMP_BUILD="$OMPCLOUD_RI_PREFIX/openmp-build"
+UNIBENCH_SRC="$OMPCLOUD_RI_PREFIX/Unibench"
+UNIBENCH_BUILD="$OMPCLOUD_RI_PREFIX/Unibench-build"
 
-export LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
-export LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
-export LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
-export LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
-export LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
-export LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
+LIBHDFS3_SRC="$OMPCLOUD_RI_PREFIX/libhdfs3"
+LIBHDFS3_BUILD="$OMPCLOUD_RI_PREFIX/libhdfs3-build"
+LLVM_SRC="$OMPCLOUD_RI_PREFIX/llvm"
+LLVM_BUILD="$OMPCLOUD_RI_PREFIX/llvm-build"
+LIBOMPTARGET_SRC="$OMPCLOUD_RI_PREFIX/libomptarget"
+LIBOMPTARGET_BUILD="$OMPCLOUD_RI_PREFIX/libomptarget-build"
 
 if [ $OP = "-r" ]; then
     export LDFLAGS="$LDFLAGS -static-libstdc++"
