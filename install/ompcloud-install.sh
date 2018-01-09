@@ -76,6 +76,17 @@ if [ $OP = "-r" ]; then
     export LDFLAGS="$LDFLAGS -static-libstdc++"
 fi
 
+# Install building tools
+if [ -n "$(command -v apt-get)" ]
+then
+  $SUDO apt-get install build-essential cmake git wget
+elif [ -n "$(command -v yum)" ]
+then
+  $SUDO yum -y install gcc gcc-c++ make cmake git wget
+else
+  echo "Your package manager is not yet supported by this script."
+fi
+
 mkdir -p $OMPCLOUD_RI_PREFIX
 
 # Install protobuf (static compilation)

@@ -56,7 +56,7 @@ ENV CPATH $LLVM_BUILD/projects/openmp/runtime/src:$CPATH
 COPY . $OMPCLOUD_DIR
 RUN chmod +x $OMPCLOUD_DIR/install/ompcloud-install-dep.sh $OMPCLOUD_DIR/install/ompcloud-install.sh
 RUN $OMPCLOUD_DIR/install/ompcloud-install-dep.sh
-RUN apt-get install -y openssh-server git wget gcc g++ cmake
+RUN apt-get install -y openssh-server
 
 RUN $OMPCLOUD_DIR/install/ompcloud-install.sh -i $INSTALL_DIR -d
 
