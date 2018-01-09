@@ -1,11 +1,18 @@
 #!/bin/bash
 set -e
 
+function realpath { echo $(cd $(dirname $1); pwd)/$(basename $1); }
+
 # Version of release
 VERSION=$1
 
+# Directory of the script
+BASEDIR=$(dirname "$0")
+REAL_BASEDIR="$(realpath $BASEDIR)"
+
 OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
-OMPCLOUD_DIR="/io"
+
+OMPCLOUD_DIR=$(dirname "$REAL_BASEDIR")
 
 RELEASE_NAME="ompcloud-$VERSION-linux-amd64"
 RELEASE_DIR="$OMPCLOUD_RI_PREFIX/$RELEASE_NAME/"

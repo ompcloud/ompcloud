@@ -28,6 +28,7 @@ fi
 # Directory of the script
 BASEDIR=$(dirname "$0")
 REAL_BASEDIR="$(realpath $BASEDIR)"
+
 # Operation mode
 OP=$1
 
@@ -38,10 +39,8 @@ fi
 
 if [ $OP == "-r" ]; then
     OMPCLOUD_RI_PREFIX="/tmp/ompcloud-release"
-    OMPCLOUD_DIR="/io"
 else
     OMPCLOUD_RI_PREFIX="$2"
-    OMPCLOUD_DIR="$OMPCLOUD_RI_PREFIX/ompcloud"
 
     if [ $# -eq 3 ] && [ $3 == "-d" ]; then
         DOCKER=1
