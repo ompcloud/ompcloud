@@ -59,3 +59,4 @@ cp $OMPCLOUD_DIR/install/ompcloud-install-dep.sh $RELEASE_DIR
 ## Create tarball
 cd $OMPCLOUD_RI_PREFIX
 tar -zcvf $OMPCLOUD_DIR/$RELEASE_NAME.tar.gz $RELEASE_NAME
+rm -rf $RELEASE_DIR
