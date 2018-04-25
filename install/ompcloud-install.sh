@@ -51,7 +51,7 @@ fi
 
 APACHE_MIRROR="http://apache.mirrors.tds.net"
 
-HADOOP_VERSION="2.7.5"
+HADOOP_VERSION="2.7.6"
 HADOOP_HOME="$OMPCLOUD_RI_PREFIX/hadoop-$HADOOP_VERSION"
 HADOOP_CONF="$HADOOP_HOME/etc/hadoop"
 
