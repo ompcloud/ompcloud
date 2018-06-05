@@ -27,7 +27,7 @@ then
   $SUDO apt-get install -y libxml2-dev uuid-dev \
     libgsasl7-dev libkrb5-dev \
     libssh-dev libelf-dev libffi-dev \
-    openjdk-8-jre-headless python-pip
+    openjdk-8-jre-headless python-pip curl
 
   if [[ `lsb_release -rs` == "14.04" ]]
   then
@@ -53,9 +53,10 @@ then
   then
     echo "Azure CLI repository is already in apt sources list."
   else
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main" | \
+    AZ_REPO=$(lsb_release -cs)
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
       $SUDO tee $az_list
-    $SUDO apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
+    curl -L https://packages.microsoft.com/keys/microsoft.asc | $SUDO apt-key add -
     $SUDO apt-get update
   fi
   $SUDO apt-get install -y azure-cli
