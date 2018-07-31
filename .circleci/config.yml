@@ -42,44 +42,23 @@ jobs:
     - run:
         working_directory: ~/ompcloud/ompcloud
         command: 'sudo docker info >/dev/null 2>&1 || sudo service docker start; '
-    # Dependencies
-    #   This would typically go in either a build or a build-and-test job when using workflows
-    # Restore the dependency cache
-    - restore_cache:
-        keys:
-        # This branch if available
-        - v1-dep-{{ .Branch }}-
-        # Default branch if not
-        - v1-dep-master-
-        # Any branch if there are none on the default branch - this should be unnecessary if you have your default branch configured correctly
-        - v1-dep-
-    # This is based on your 1.0 configuration file or project settings
-    - run: docker build --rm=false -f Dockerfile -t $DOCKER_REPO:$CIRCLE_SHA1 .
-    # Save dependency cache
-    - save_cache:
-        key: v1-dep-{{ .Branch }}-{{ epoch }}
-        paths:
-        # This is a broad list of cache paths to include many possible development environments
-        # You can probably delete some of these entries
-        - vendor/bundle
-        - ~/virtualenvs
-        - ~/.m2
-        - ~/.ivy2
-        - ~/.bundle
-        - ~/.go_workspace
-        - ~/.gradle
-        - ~/.cache/bower
-    # Test
-    #   This would typically be a build job when using workflows, possibly combined with build
-    # This is based on your 1.0 configuration file or project settings
-    - run: docker run -t --name $DOCKER_IMG $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init -- /opt/ompcloud/script/ompcloud-runtests.sh -q
-    # Deployment
-    # Your existing circle.yml file contains deployment steps.
-    # The config translation tool does not support translating deployment steps
-    # since deployment in CircleCI 2.0 are better handled through workflows.
-    # See the documentation for more information https://circleci.com/docs/2.0/workflows/
-    # Teardown
-    #   If you break your build into multiple jobs with workflows, you will probably want to do the parts of this that are relevant in each
+
+    - run:
+        name: Build Docker image
+        command: |
+          docker build --rm=false -f Dockerfile -t $DOCKER_REPO:$CIRCLE_SHA1 .
+    - run:
+        name: Test Docker image
+        command: |
+          docker run -t --name $DOCKER_IMG $DOCKER_REPO:$CIRCLE_SHA1 /sbin/my_init -- /opt/ompcloud/script/ompcloud-runtests.sh -q
+    - run:
+        name: Tag and Push Docker image
+        command: |
+          docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+          docker tag $DOCKER_REPO:$CIRCLE_SHA1 $DOCKER_REPO:latest
+          docker tag $DOCKER_REPO:$CIRCLE_SHA1 $DOCKER_REPO:circle-$CIRCLE_BUILD_NUM
+          docker push $DOCKER_REPO
+
     # Save test results
     - store_test_results:
         path: /tmp/circleci-test-results
